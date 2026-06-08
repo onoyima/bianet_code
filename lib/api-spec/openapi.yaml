@@ -1,0 +1,2212 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 1.0.0
+  description: Bia'net Platform API — Seed Marketplace, Bartar Commodity Exchange, Admin Governance
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication and session management
+  - name: users
+    description: User profile management
+  - name: seed
+    description: Seed agritech marketplace
+  - name: bartar
+    description: Bartar commodity exchange
+  - name: ai
+    description: AI crop diagnostic engine
+  - name: admin
+    description: Admin moderation and governance
+  - name: notifications
+    description: User notifications
+  - name: webhooks
+    description: Payment provider webhooks
+  - name: messages
+    description: Real-time trade messaging
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  # ─── AUTH ────────────────────────────────────────────────────────────────────
+
+  /v1/auth/otp/send:
+    post:
+      operationId: sendOtp
+      tags: [auth]
+      summary: Send OTP to phone number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OtpRequest"
+      responses:
+        "200":
+          description: OTP sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+
+  /v1/auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /v1/auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login with phone and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/auth/refresh:
+    post:
+      operationId: refreshToken
+      tags: [auth]
+      summary: Refresh access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshInput"
+      responses:
+        "200":
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout and revoke refresh token
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshInput"
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ─── USERS ───────────────────────────────────────────────────────────────────
+
+  /v1/users/me:
+    get:
+      operationId: getMe
+      tags: [users]
+      summary: Get current user profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    patch:
+      operationId: updateMe
+      tags: [users]
+      summary: Update current user profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+      responses:
+        "200":
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/users/me/pin:
+    patch:
+      operationId: updatePin
+      tags: [users]
+      summary: Set or update transaction PIN
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PinUpdate"
+      responses:
+        "200":
+          description: PIN updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ─── AI DIAGNOSTIC ───────────────────────────────────────────────────────────
+
+  /v1/ai/diagnose:
+    post:
+      operationId: aiDiagnose
+      tags: [ai]
+      summary: Submit plant image for AI disease diagnosis
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DiagnoseInput"
+      responses:
+        "200":
+          description: Diagnostic result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiagnosticResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+
+  /v1/ai/history:
+    get:
+      operationId: getDiagnosticHistory
+      tags: [ai]
+      summary: Get user diagnostic history
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Diagnostic history
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiagnosticHistoryResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ─── SEED MARKETPLACE ────────────────────────────────────────────────────────
+
+  /v1/seed/listings:
+    post:
+      operationId: createSeedListing
+      tags: [seed]
+      summary: Create a new produce listing
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SeedListingInput"
+      responses:
+        "201":
+          description: Listing created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeedListing"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/seed/listings/nearby:
+    get:
+      operationId: getNearbySeedListings
+      tags: [seed]
+      summary: Get nearby produce listings using geospatial search
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: lng
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: radius_km
+          in: query
+          schema:
+            type: number
+            default: 50
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Nearby listings with distance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NearbyListingsResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/seed/listings/{id}:
+    get:
+      operationId: getSeedListing
+      tags: [seed]
+      summary: Get a produce listing by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Listing detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeedListing"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateSeedListing
+      tags: [seed]
+      summary: Update a produce listing
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SeedListingUpdate"
+      responses:
+        "200":
+          description: Listing updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeedListing"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      operationId: deleteSeedListing
+      tags: [seed]
+      summary: Delete a produce listing
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Listing deleted
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/seed/orders:
+    post:
+      operationId: placeSeedOrder
+      tags: [seed]
+      summary: Place an order (initializes escrow)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SeedOrderInput"
+      responses:
+        "201":
+          description: Order placed and escrow initialized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EscrowTransaction"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/seed/orders/{id}/confirm-delivery:
+    post:
+      operationId: confirmSeedDelivery
+      tags: [seed]
+      summary: Buyer confirms delivery — releases escrow
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeliveryConfirmInput"
+      responses:
+        "200":
+          description: Delivery confirmed, escrow released
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EscrowTransaction"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/seed/orders/{id}/dispute:
+    post:
+      operationId: disputeSeedOrder
+      tags: [seed]
+      summary: Raise a dispute on an escrow transaction
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DisputeInput"
+      responses:
+        "200":
+          description: Dispute raised
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EscrowTransaction"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  # ─── BARTAR ──────────────────────────────────────────────────────────────────
+
+  /v1/bartar/kyc:
+    post:
+      operationId: submitKyc
+      tags: [bartar]
+      summary: Submit KYC documents for verification
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KycInput"
+      responses:
+        "201":
+          description: KYC submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KycDocument"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /v1/bartar/kyc/status:
+    get:
+      operationId: getKycStatus
+      tags: [bartar]
+      summary: Get current user's KYC status
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: KYC status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KycDocument"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/bartar/listings:
+    post:
+      operationId: createBartarListing
+      tags: [bartar]
+      summary: Create a commodity listing (requires approved KYC)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BartarListingInput"
+      responses:
+        "201":
+          description: Listing created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BartarListing"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    get:
+      operationId: listBartarListings
+      tags: [bartar]
+      summary: List commodity listings with filters
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commodity
+          in: query
+          schema:
+            type: string
+        - name: country
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Listings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BartarListingsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/bartar/listings/{id}:
+    get:
+      operationId: getBartarListing
+      tags: [bartar]
+      summary: Get a commodity listing by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Listing detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BartarListing"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/bartar/escrow:
+    post:
+      operationId: initBartarEscrow
+      tags: [bartar]
+      summary: Initialize escrow for commodity trade
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EscrowInput"
+      responses:
+        "201":
+          description: Escrow initialized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EscrowTransaction"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/bartar/escrow/{id}:
+    get:
+      operationId: getEscrow
+      tags: [bartar]
+      summary: Get escrow transaction detail
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Escrow detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EscrowTransaction"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/bartar/escrow/{id}/confirm:
+    post:
+      operationId: confirmBartarDelivery
+      tags: [bartar]
+      summary: Confirm shipment and release escrow funds
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeliveryConfirmInput"
+      responses:
+        "200":
+          description: Escrow released
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EscrowTransaction"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/bartar/contracts:
+    post:
+      operationId: generateContract
+      tags: [bartar]
+      summary: Generate immutable trade contract
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractInput"
+      responses:
+        "201":
+          description: Contract generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TradeContract"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /v1/bartar/contracts/{id}/sign:
+    post:
+      operationId: signContract
+      tags: [bartar]
+      summary: Sign a trade contract
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PinVerifyInput"
+      responses:
+        "200":
+          description: Contract signed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TradeContract"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ─── ADMIN ───────────────────────────────────────────────────────────────────
+
+  /v1/admin/kyc:
+    get:
+      operationId: adminListKyc
+      tags: [admin]
+      summary: List KYC submissions for review
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: KYC submissions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KycListResponse"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/admin/kyc/{id}/status:
+    patch:
+      operationId: adminUpdateKycStatus
+      tags: [admin]
+      summary: Approve or reject a KYC submission
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KycStatusUpdate"
+      responses:
+        "200":
+          description: KYC status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KycDocument"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/admin/escrow/{id}/arbitrate:
+    post:
+      operationId: adminArbitrate
+      tags: [admin]
+      summary: Resolve escrow dispute via arbitration
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArbitrationInput"
+      responses:
+        "200":
+          description: Arbitration resolved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EscrowTransaction"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/admin/logs:
+    get:
+      operationId: adminGetLogs
+      tags: [admin]
+      summary: Get admin audit logs
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: adminId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: action
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        "200":
+          description: Audit logs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminLogsResponse"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/admin/users:
+    get:
+      operationId: adminListUsers
+      tags: [admin]
+      summary: List all platform users
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: role
+          in: query
+          schema:
+            type: string
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        "200":
+          description: Users list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsersListResponse"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/admin/users/{id}/suspend:
+    patch:
+      operationId: adminSuspendUser
+      tags: [admin]
+      summary: Suspend or reactivate a user account
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSuspendInput"
+      responses:
+        "200":
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ─── NOTIFICATIONS ───────────────────────────────────────────────────────────
+
+  /v1/notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: Get user notifications
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: isRead
+          in: query
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/notifications/{id}/read:
+    patch:
+      operationId: markNotificationRead
+      tags: [notifications]
+      summary: Mark notification as read
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Notification marked read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/notifications/read-all:
+    patch:
+      operationId: markAllNotificationsRead
+      tags: [notifications]
+      summary: Mark all notifications as read
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All marked read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ─── MESSAGES ────────────────────────────────────────────────────────────────
+
+  /v1/messages/unread-count:
+    get:
+      operationId: getUnreadMessageCount
+      tags: [messages]
+      summary: Get total unread message count across all trades
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Unread count
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnreadCountResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/messages/{tradeId}:
+    get:
+      operationId: getTradeMessages
+      tags: [messages]
+      summary: Get paginated message history for a trade
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: tradeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: before
+          in: query
+          description: ISO timestamp cursor for keyset pagination
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: Message history
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessagesResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/messages/{tradeId}/read:
+    patch:
+      operationId: markTradeMessagesRead
+      tags: [messages]
+      summary: Mark all unread messages in a trade as read
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: tradeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Messages marked read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadReceiptResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ─── WEBHOOKS ────────────────────────────────────────────────────────────────
+
+  /v1/webhooks/paystack:
+    post:
+      operationId: paystackWebhook
+      tags: [webhooks]
+      summary: Paystack payment webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebhookPayload"
+      responses:
+        "200":
+          description: Acknowledged
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /v1/webhooks/flutterwave:
+    post:
+      operationId: flutterwaveWebhook
+      tags: [webhooks]
+      summary: Flutterwave payment webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebhookPayload"
+      responses:
+        "200":
+          description: Acknowledged
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    TooManyRequests:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - page
+        - limit
+        - total
+        - totalPages
+
+    # ─── AUTH SCHEMAS ──────────────────────────────────────────────────────────
+
+    OtpRequest:
+      type: object
+      required:
+        - phone
+      properties:
+        phone:
+          type: string
+          minLength: 10
+          maxLength: 20
+        purpose:
+          type: string
+          enum: [REGISTRATION, LOGIN, PIN_RESET]
+          default: REGISTRATION
+
+    RegisterInput:
+      type: object
+      required:
+        - phone
+        - otp
+        - password
+        - firstName
+        - lastName
+        - role
+      properties:
+        phone:
+          type: string
+        otp:
+          type: string
+          minLength: 6
+          maxLength: 6
+        password:
+          type: string
+          minLength: 8
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: ["string", "null"]
+          format: email
+        role:
+          type: string
+          enum:
+            - FARMER
+            - CONSUMER
+            - TRADER
+            - EXPORTER
+            - IMPORTER
+            - LOGISTICS_PROVIDER
+            - AGRI_SUPPLIER
+            - COOPERATIVE_MANAGER
+        language:
+          type: string
+          enum: [en, ha, ig, yo]
+          default: en
+
+    LoginInput:
+      type: object
+      required:
+        - phone
+        - password
+      properties:
+        phone:
+          type: string
+        password:
+          type: string
+
+    RefreshInput:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+
+    AuthResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshToken
+        - user
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          $ref: "#/components/schemas/UserProfile"
+
+    TokenResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshToken
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+
+    # ─── USER SCHEMAS ──────────────────────────────────────────────────────────
+
+    UserProfile:
+      type: object
+      required:
+        - id
+        - phone
+        - role
+        - language
+        - isActive
+        - kycStatus
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        phone:
+          type: string
+        email:
+          type: ["string", "null"]
+        role:
+          type: string
+        language:
+          type: string
+        isActive:
+          type: boolean
+        kycStatus:
+          type: string
+        firstName:
+          type: ["string", "null"]
+        lastName:
+          type: ["string", "null"]
+        avatarUrl:
+          type: ["string", "null"]
+        businessName:
+          type: ["string", "null"]
+        state:
+          type: ["string", "null"]
+        country:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+
+    ProfileUpdate:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        language:
+          type: string
+          enum: [en, ha, ig, yo]
+        avatarUrl:
+          type: string
+        businessName:
+          type: string
+        state:
+          type: string
+
+    PinUpdate:
+      type: object
+      required:
+        - pin
+      properties:
+        currentPin:
+          type: ["string", "null"]
+        pin:
+          type: string
+          minLength: 4
+          maxLength: 6
+          pattern: "^[0-9]+$"
+
+    PinVerifyInput:
+      type: object
+      required:
+        - pin
+      properties:
+        pin:
+          type: string
+          minLength: 4
+          maxLength: 6
+
+    # ─── AI SCHEMAS ────────────────────────────────────────────────────────────
+
+    DiagnoseInput:
+      type: object
+      required:
+        - imageUrl
+      properties:
+        imageUrl:
+          type: string
+        cropType:
+          type: ["string", "null"]
+        language:
+          type: string
+          enum: [en, ha, ig, yo]
+          default: en
+
+    DiagnosticResult:
+      type: object
+      required:
+        - id
+        - userId
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        imageUrl:
+          type: ["string", "null"]
+        diseaseName:
+          type: ["string", "null"]
+        confidence:
+          type: ["number", "null"]
+        isHealthy:
+          type: ["string", "null"]
+        treatmentOrganic:
+          type: ["string", "null"]
+        treatmentChemical:
+          type: ["string", "null"]
+        cropType:
+          type: ["string", "null"]
+        language:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    DiagnosticHistoryResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/DiagnosticResult"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    # ─── SEED SCHEMAS ──────────────────────────────────────────────────────────
+
+    SeedListingInput:
+      type: object
+      required:
+        - title
+        - description
+        - price
+        - quantity
+        - unit
+        - category
+        - latitude
+        - longitude
+      properties:
+        title:
+          type: string
+          minLength: 3
+        description:
+          type: string
+        price:
+          type: string
+        currency:
+          type: string
+          default: NGN
+        quantity:
+          type: string
+        unit:
+          type: string
+        category:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        state:
+          type: ["string", "null"]
+
+    SeedListingUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: string
+        quantity:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE, DRAFT, SUSPENDED]
+        imageUrls:
+          type: array
+          items:
+            type: string
+
+    SeedListing:
+      type: object
+      required:
+        - id
+        - sellerId
+        - title
+        - price
+        - quantity
+        - unit
+        - category
+        - latitude
+        - longitude
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        sellerId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: string
+        currency:
+          type: string
+        quantity:
+          type: string
+        unit:
+          type: string
+        category:
+          type: string
+        imageUrls:
+          type: ["array", "null"]
+          items:
+            type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        state:
+          type: ["string", "null"]
+        country:
+          type: string
+        status:
+          type: string
+        viewCount:
+          type: integer
+        distanceKm:
+          type: ["number", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    NearbyListingsResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/SeedListing"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    SeedOrderInput:
+      type: object
+      required:
+        - listingId
+        - quantity
+      properties:
+        listingId:
+          type: string
+          format: uuid
+        quantity:
+          type: string
+        insurance:
+          type: boolean
+          default: false
+
+    DeliveryConfirmInput:
+      type: object
+      required:
+        - verificationCode
+        - pin
+      properties:
+        verificationCode:
+          type: string
+        pin:
+          type: string
+
+    DisputeInput:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          type: string
+          minLength: 20
+
+    # ─── BARTAR SCHEMAS ────────────────────────────────────────────────────────
+
+    KycInput:
+      type: object
+      required:
+        - cacNumber
+      properties:
+        cacNumber:
+          type: string
+        taxClearanceUrl:
+          type: ["string", "null"]
+        exportLicenseUrl:
+          type: ["string", "null"]
+        governmentIdUrl:
+          type: ["string", "null"]
+        businessDocUrl:
+          type: ["string", "null"]
+
+    KycDocument:
+      type: object
+      required:
+        - id
+        - userId
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        cacNumber:
+          type: ["string", "null"]
+        taxClearanceUrl:
+          type: ["string", "null"]
+        exportLicenseUrl:
+          type: ["string", "null"]
+        governmentIdUrl:
+          type: ["string", "null"]
+        businessDocUrl:
+          type: ["string", "null"]
+        status:
+          type: string
+        reviewerNotes:
+          type: ["string", "null"]
+        submittedAt:
+          type: ["string", "null"]
+          format: date-time
+        reviewedAt:
+          type: ["string", "null"]
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    KycListResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/KycDocument"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    KycStatusUpdate:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [APPROVED, REJECTED, UNDER_REVIEW]
+        notes:
+          type: ["string", "null"]
+
+    BartarListingInput:
+      type: object
+      required:
+        - commodity
+        - quantity
+        - unit
+        - price
+      properties:
+        commodity:
+          type: string
+        quantity:
+          type: string
+        unit:
+          type: string
+        moistureLevel:
+          type: ["string", "null"]
+        qualityGrade:
+          type: ["string", "null"]
+        price:
+          type: string
+        currency:
+          type: string
+          default: USD
+        shippingTerms:
+          type: ["string", "null"]
+        destination:
+          type: ["array", "null"]
+          items:
+            type: string
+        description:
+          type: ["string", "null"]
+        imageUrls:
+          type: ["array", "null"]
+          items:
+            type: string
+
+    BartarListing:
+      type: object
+      required:
+        - id
+        - sellerId
+        - commodity
+        - quantity
+        - unit
+        - price
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        sellerId:
+          type: string
+          format: uuid
+        commodity:
+          type: string
+        quantity:
+          type: string
+        unit:
+          type: string
+        moistureLevel:
+          type: ["string", "null"]
+        qualityGrade:
+          type: ["string", "null"]
+        price:
+          type: string
+        currency:
+          type: string
+        shippingTerms:
+          type: ["string", "null"]
+        destination:
+          type: ["array", "null"]
+          items:
+            type: string
+        originCountry:
+          type: string
+        description:
+          type: ["string", "null"]
+        imageUrls:
+          type: ["array", "null"]
+          items:
+            type: string
+        status:
+          type: string
+        isVerifiedExporter:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    BartarListingsResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/BartarListing"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    EscrowInput:
+      type: object
+      required:
+        - listingId
+        - amount
+      properties:
+        listingId:
+          type: string
+          format: uuid
+        amount:
+          type: string
+        currency:
+          type: string
+          default: NGN
+        insurance:
+          type: boolean
+          default: false
+
+    EscrowTransaction:
+      type: object
+      required:
+        - id
+        - platform
+        - buyerId
+        - sellerId
+        - amount
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        platform:
+          type: string
+        listingId:
+          type: string
+          format: uuid
+        buyerId:
+          type: string
+          format: uuid
+        sellerId:
+          type: string
+          format: uuid
+        amount:
+          type: string
+        currency:
+          type: string
+        platformCommission:
+          type: string
+        logisticsFee:
+          type: string
+        insuranceFee:
+          type: string
+        netSellerPayout:
+          type: string
+        status:
+          type: string
+        paymentReference:
+          type: ["string", "null"]
+        paymentProvider:
+          type: ["string", "null"]
+        depositedAt:
+          type: ["string", "null"]
+          format: date-time
+        releasedAt:
+          type: ["string", "null"]
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ContractInput:
+      type: object
+      required:
+        - escrowId
+        - terms
+      properties:
+        escrowId:
+          type: string
+          format: uuid
+        terms:
+          type: string
+          minLength: 50
+
+    TradeContract:
+      type: object
+      required:
+        - id
+        - escrowId
+        - contentHash
+        - contentUrl
+        - signedByBuyer
+        - signedBySeller
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        escrowId:
+          type: string
+          format: uuid
+        contentHash:
+          type: string
+        contentUrl:
+          type: string
+        terms:
+          type: string
+        signedByBuyer:
+          type: boolean
+        signedBySeller:
+          type: boolean
+        buyerSignedAt:
+          type: ["string", "null"]
+          format: date-time
+        sellerSignedAt:
+          type: ["string", "null"]
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    # ─── ADMIN SCHEMAS ─────────────────────────────────────────────────────────
+
+    ArbitrationInput:
+      type: object
+      required:
+        - decision
+        - notes
+      properties:
+        decision:
+          type: string
+          enum: [RELEASE_TO_SELLER, REFUND_TO_BUYER, SPLIT]
+        payoutBuyer:
+          type: ["string", "null"]
+        payoutSeller:
+          type: ["string", "null"]
+        notes:
+          type: string
+          minLength: 20
+
+    AdminLog:
+      type: object
+      required:
+        - id
+        - adminId
+        - action
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        adminId:
+          type: string
+          format: uuid
+        action:
+          type: string
+        entityType:
+          type: ["string", "null"]
+        entityId:
+          type: ["string", "null"]
+        ipAddress:
+          type: ["string", "null"]
+        result:
+          type: string
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+
+    AdminLogsResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminLog"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    UsersListResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserProfile"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    UserSuspendInput:
+      type: object
+      required:
+        - isActive
+      properties:
+        isActive:
+          type: boolean
+        reason:
+          type: ["string", "null"]
+
+    # ─── NOTIFICATION SCHEMAS ──────────────────────────────────────────────────
+
+    Notification:
+      type: object
+      required:
+        - id
+        - userId
+        - title
+        - body
+        - type
+        - isRead
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        body:
+          type: string
+        type:
+          type: string
+        entityType:
+          type: ["string", "null"]
+        entityId:
+          type: ["string", "null"]
+        isRead:
+          type: boolean
+        readAt:
+          type: ["string", "null"]
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    NotificationsResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Notification"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    # ─── MESSAGE SCHEMAS ──────────────────────────────────────────────────────
+
+    Message:
+      type: object
+      required:
+        - id
+        - tradeId
+        - senderId
+        - receiverId
+        - content
+        - messageType
+        - isRead
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        tradeId:
+          type: ["string", "null"]
+          format: uuid
+        senderId:
+          type: string
+          format: uuid
+        receiverId:
+          type: string
+          format: uuid
+        content:
+          type: string
+        messageType:
+          type: string
+          enum: [TEXT, IMAGE, FILE]
+        attachmentUrl:
+          type: ["string", "null"]
+        isRead:
+          type: boolean
+        readAt:
+          type: ["string", "null"]
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    MessagesResponse:
+      type: object
+      required:
+        - messages
+        - hasMore
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+        hasMore:
+          type: boolean
+        nextCursor:
+          type: ["string", "null"]
+          format: date-time
+
+    UnreadCountResponse:
+      type: object
+      required:
+        - unreadCount
+      properties:
+        unreadCount:
+          type: integer
+
+    ReadReceiptResponse:
+      type: object
+      required:
+        - read
+      properties:
+        read:
+          type: integer
+          description: Number of messages marked as read
+
+    # ─── WEBHOOK SCHEMAS ───────────────────────────────────────────────────────
+
+    WebhookPayload:
+      type: object
+      additionalProperties: true

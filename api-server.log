@@ -1,0 +1,54 @@
+[18:10:22.723] [32mINFO[39m (17216): [36mServer listening[39m
+    [35mport[39m: 8080
+[18:10:22.724] [32mINFO[39m (17216): [36mWebSocket endpoint ready[39m
+    [35mpath[39m: "/api/ws"
+[17:25:52.328] [32mINFO[39m (17216): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/health"
+    }
+    [35mres[39m: {
+      "statusCode": 404
+    }
+    [35mresponseTime[39m: 134
+[17:26:01.506] [32mINFO[39m (17216): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/"
+    }
+    [35mres[39m: {
+      "statusCode": 404
+    }
+    [35mresponseTime[39m: 20
+[17:26:02.094] [32mINFO[39m (17216): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "GET",
+      "url": "/api/status"
+    }
+    [35mres[39m: {
+      "statusCode": 404
+    }
+    [35mresponseTime[39m: 76
+[18:08:23.507] [32mINFO[39m (17216): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "GET",
+      "url": "/"
+    }
+    [35mres[39m: {
+      "statusCode": 404
+    }
+    [35mresponseTime[39m: 7
+[18:08:25.314] [32mINFO[39m (17216): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "GET",
+      "url": "/favicon.ico"
+    }
+    [35mres[39m: {
+      "statusCode": 404
+    }
+    [35mresponseTime[39m: 4

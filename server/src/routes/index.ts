@@ -1,0 +1,40 @@
+import { Router, type IRouter } from "express";
+import healthRouter from "./health";
+import authRouter from "./v1/auth";
+import usersRouter from "./v1/users";
+import aiRouter from "./v1/ai";
+import seedRouter from "./v1/seed";
+import bartarRouter from "./v1/bartar";
+import adminRouter from "./v1/admin";
+import notificationsRouter from "./v1/notifications";
+import webhooksRouter from "./v1/webhooks";
+import messagesRouter from "./v1/messages";
+import logisticsRouter from "./v1/logistics";
+import educationalContentRouter from "./v1/educational-content";
+import reviewsRouter from "./v1/reviews";
+import cartRouter from "./v1/cart";
+import negotiationsRouter from "./v1/negotiations";
+import paymentsRouter from "./v1/payments";
+import shipmentsRouter from "./v1/shipments";
+
+const router: IRouter = Router();
+
+router.use(healthRouter);
+router.use(authRouter);
+router.use(usersRouter);
+router.use(aiRouter);
+router.use(seedRouter);
+router.use(bartarRouter);
+router.use(adminRouter);
+router.use(notificationsRouter);
+router.use(webhooksRouter);
+router.use(messagesRouter);
+router.use(logisticsRouter);
+router.use(educationalContentRouter);
+router.use(reviewsRouter);
+router.use(cartRouter);
+router.use(negotiationsRouter);
+router.use(paymentsRouter);
+router.use(shipmentsRouter);
+
+export default router;

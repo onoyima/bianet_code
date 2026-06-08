@@ -1,0 +1,560 @@
+
+<h2 class="sr-only">Bia'net Tech Ltd. — Comprehensive usage flows for all stakeholders: buyers, vendors, enterprise traders, admins, and logistics partners</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1.25rem}
+.tab{padding:5px 13px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:20px;cursor:pointer;background:transparent;color:var(--color-text-secondary)}
+.tab.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.panel{display:none}.panel.active{display:block}
+.flow-header{display:flex;align-items:center;gap:10px;padding:.875rem 1rem;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:1rem;background:var(--color-background-primary)}
+.flow-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.flow-title{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.flow-sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.flow-stages{display:flex;flex-direction:column;gap:0}
+.stage{display:flex;gap:12px;position:relative}
+.stage-left{display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0}
+.stage-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.stage-line{width:1px;flex:1;min-height:10px;margin:2px 0}
+.stage-body{flex:1;padding-bottom:14px}
+.stage-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.stage-steps{display:flex;flex-direction:column;gap:3px}
+.step{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--color-text-secondary);padding:4px 8px;border-radius:6px}
+.step.action{background:var(--color-background-secondary)}
+.step.system{background:transparent}
+.step.decision{background:var(--color-background-warning);opacity:.85}
+.step.error{background:var(--color-background-danger);opacity:.85}
+.step i{font-size:13px;margin-top:1px;flex-shrink:0}
+.step-label{font-size:9px;padding:1px 5px;border-radius:4px;margin-left:4px;font-weight:500;flex-shrink:0}
+.lbl-user{background:#E6F1FB;color:#185FA5}
+.lbl-sys{background:#EAF3DE;color:#3B6D11}
+.lbl-api{background:#FAEEDA;color:#854F0B}
+.lbl-ext{background:#EEEDFE;color:#534AB7}
+.lbl-auto{background:#FBEAF0;color:#993556}
+.db-note{font-size:10px;color:var(--color-text-secondary);padding:3px 7px;border-left:2px solid var(--color-border-secondary);margin-top:4px;font-family:var(--font-mono)}
+.branch{display:flex;gap:8px;margin-top:4px}
+.branch-yes{flex:1;padding:5px 7px;background:var(--color-background-success);border-radius:6px;font-size:11px;color:var(--color-text-success)}
+.branch-no{flex:1;padding:5px 7px;background:var(--color-background-danger);border-radius:6px;font-size:11px;color:var(--color-text-danger)}
+</style>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('buyer')">Buyer</button>
+  <button class="tab" onclick="show('vendor')">Vendor</button>
+  <button class="tab" onclick="show('enterprise')">Enterprise (Bartar)</button>
+  <button class="tab" onclick="show('admin')">Admin</button>
+  <button class="tab" onclick="show('logistics')">Logistics partner</button>
+  <button class="tab" onclick="show('ai')">AI / system</button>
+</div>
+
+<!-- BUYER FLOW -->
+<div class="panel active" id="panel-buyer">
+<div class="flow-header">
+  <div class="flow-avatar" style="background:#E6F1FB">🛒</div>
+  <div><div class="flow-title">Buyer — complete journey</div><div class="flow-sub">From app download to repeat purchase. Covers registration, KYC, browsing, ordering, payment, tracking, and dispute.</div></div>
+</div>
+<div class="flow-stages">
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#E6F1FB;color:#185FA5">1</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Registration</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-device-mobile" aria-hidden="true"></i><span>Downloads Seed app (Android/iOS), enters phone number</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-message" aria-hidden="true"></i><span>OTP sent via Termii SMS — POST /auth/register</span><span class="step-label lbl-api">API</span></div>
+      <div class="step action"><i class="ti ti-keyboard" aria-hidden="true"></i><span>Enters 6-digit OTP within 60 seconds</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-check" aria-hidden="true"></i><span>JWT access token + refresh token issued — users row created, role = buyer</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step action"><i class="ti ti-forms" aria-hidden="true"></i><span>Enters display name (optional), confirms role as buyer. Light KYC only — no BVN/NIN required for buyers.</span><span class="step-label lbl-user">buyer</span></div>
+    </div>
+    <div class="db-note">users: id, phone, role='buyer', kyc_status='none', created_at</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#E6F1FB;color:#185FA5">2</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Browse & discover</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-search" aria-hidden="true"></i><span>Searches "maize" or browses Grains category</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-database" aria-hidden="true"></i><span>GET /seed/listings?q=maize&category=grains — full-text tsvector search, cached in Redis (5min TTL)</span><span class="step-label lbl-api">API</span></div>
+      <div class="step action"><i class="ti ti-filter" aria-hidden="true"></i><span>Filters by price range, location (state), in-stock only</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-eye" aria-hidden="true"></i><span>listing view_count incremented asynchronously via SQS job (non-blocking)</span><span class="step-label lbl-auto">async</span></div>
+      <div class="step action"><i class="ti ti-clipboard-text" aria-hidden="true"></i><span>Opens listing detail — views photos, price, vendor rating, MOQ, stock status</span><span class="step-label lbl-user">buyer</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#E6F1FB;color:#185FA5">3</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Cart & checkout</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-shopping-cart-plus" aria-hidden="true"></i><span>Sets quantity (≥ MOQ), taps "Add to cart"</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-lock" aria-hidden="true"></i><span>Unit price snapshotted into carts.items jsonb at add time — price changes post-add don't affect cart</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step action"><i class="ti ti-map-pin" aria-hidden="true"></i><span>Reviews cart, enters delivery address (or selects saved address)</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step action"><i class="ti ti-credit-card" aria-hidden="true"></i><span>Taps "Pay" — Paystack payment sheet opens (card, bank transfer, USSD)</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-external-link" aria-hidden="true"></i><span>POST /payments/initiate → Paystack API → returns payment_reference + redirect URL</span><span class="step-label lbl-ext">Paystack</span></div>
+      <div class="step action"><i class="ti ti-check" aria-hidden="true"></i><span>Completes payment on Paystack UI</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-webhook" aria-hidden="true"></i><span>Paystack fires webhook → POST /payments/webhook — idempotency check on provider_ref → order status: paid → escrow hold created</span><span class="step-label lbl-api">API</span></div>
+      <div class="step system"><i class="ti ti-bell" aria-hidden="true"></i><span>Push notification to buyer: "Order confirmed" — FCM via Firebase</span><span class="step-label lbl-auto">async</span></div>
+      <div class="step system"><i class="ti ti-bell" aria-hidden="true"></i><span>Push notification to vendor: "New order from [buyer]"</span><span class="step-label lbl-auto">async</span></div>
+    </div>
+    <div class="db-note">orders: status='paid', escrow_accounts: status='holding', payment_transactions: status='successful'</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#E6F1FB;color:#185FA5">4</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Order tracking</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-truck" aria-hidden="true"></i><span>Vendor confirms and dispatches — order status: in_transit, shipment record created</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step action"><i class="ti ti-eye" aria-hidden="true"></i><span>Buyer tracks order in-app — sees event timeline (confirmed → dispatched → out for delivery)</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step action"><i class="ti ti-message" aria-hidden="true"></i><span>Buyer messages vendor directly in order-scoped chat (Socket.io)</span><span class="step-label lbl-user">buyer</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#E6F1FB;color:#185FA5">5</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Delivery confirmation → decision point</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-package-import" aria-hidden="true"></i><span>Receives goods, taps "Confirm delivery" in app</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-coin" aria-hidden="true"></i><span>Escrow released — platform deducts 3-5% commission — vendor wallet credited — payout scheduled T+2</span><span class="step-label lbl-auto">auto</span></div>
+    </div>
+    <div class="branch">
+      <div class="branch-yes"><i class="ti ti-check" aria-hidden="true"></i> Happy with goods → leaves review → order completed. AI model records positive signal for vendor ranking.</div>
+      <div class="branch-no"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Issue found → raises dispute within 48h → selects reason, uploads evidence photos → escrow frozen → admin review begins.</div>
+    </div>
+    <div class="db-note">order_events: delivery_confirmed | dispute raised → disputes table, escrow frozen</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#E6F1FB;color:#185FA5">6</div></div>
+  <div class="stage-body">
+    <div class="stage-title">Repeat & loyalty</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-brain" aria-hidden="true"></i><span>AI recommendation engine (Phase 2) surfaces "similar products" and "vendors you've bought from" on home screen</span><span class="step-label lbl-auto">AI</span></div>
+      <div class="step action"><i class="ti ti-repeat" aria-hidden="true"></i><span>Buyer returns, orders again — same vendor or new vendor discovered via recommendations</span><span class="step-label lbl-user">buyer</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- VENDOR FLOW -->
+<div class="panel" id="panel-vendor">
+<div class="flow-header">
+  <div class="flow-avatar" style="background:#EAF3DE">🌾</div>
+  <div><div class="flow-title">Vendor (Seed) — complete journey</div><div class="flow-sub">From onboarding to receiving payout. Covers KYC, verification, listing creation, order management, and withdrawal.</div></div>
+</div>
+<div class="flow-stages">
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#EAF3DE;color:#3B6D11">1</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Registration + identity verification</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-device-mobile" aria-hidden="true"></i><span>Downloads Seed, enters phone, completes OTP — same as buyer registration</span><span class="step-label lbl-user">vendor</span></div>
+      <div class="step action"><i class="ti ti-user-circle" aria-hidden="true"></i><span>Selects "I want to sell" — role updated to vendor, KYC flow begins</span><span class="step-label lbl-user">vendor</span></div>
+      <div class="step action"><i class="ti ti-id" aria-hidden="true"></i><span>Enters BVN (11-digit) + NIN — submitted to Smile Identity / Mono via POST /kyc/bvn-verify</span><span class="step-label lbl-ext">KYC API</span></div>
+      <div class="step system"><i class="ti ti-check" aria-hidden="true"></i><span>Provider returns match result — kyc_records row created with provider_ref and raw_response</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step action"><i class="ti ti-camera" aria-hidden="true"></i><span>Face liveness capture — camera screen → base64 image submitted to face recognition API</span><span class="step-label lbl-ext">Face API</span></div>
+      <div class="step system"><i class="ti ti-alert-circle" aria-hidden="true"></i><span>If any KYC check fails → placed in manual review queue → admin reviews document manually within 24h</span><span class="step-label lbl-auto">fallback</span></div>
+    </div>
+    <div class="db-note">users: bvn_verified=true, nin_verified=true, face_verified=true | kyc_records: 3 rows</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#EAF3DE;color:#3B6D11">2</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Vendor profile setup</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-building-store" aria-hidden="true"></i><span>Enters business name, category, state, LGA, address</span><span class="step-label lbl-user">vendor</span></div>
+      <div class="step action"><i class="ti ti-building-bank" aria-hidden="true"></i><span>Enters bank account number + selects bank from Paystack bank list → bank name auto-resolved</span><span class="step-label lbl-ext">Paystack</span></div>
+      <div class="step system"><i class="ti ti-clock" aria-hidden="true"></i><span>vendor_profiles row created, approval_status = 'pending' — profile locked from editing until approved</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step system"><i class="ti ti-bell" aria-hidden="true"></i><span>Admin queue notification fired — POST /admin/notifications/vendor-applied</span><span class="step-label lbl-auto">async</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#EAF3DE;color:#3B6D11">3</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Admin approval (depends on admin flow)</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-user-check" aria-hidden="true"></i><span>Admin reviews: KYC status, business details, bank account — approves or rejects with reason</span><span class="step-label lbl-sys">admin</span></div>
+    </div>
+    <div class="branch">
+      <div class="branch-yes"><i class="ti ti-check" aria-hidden="true"></i> Approved → vendor_profiles.approval_status = 'approved' → push notification: "You're live! Start listing."</div>
+      <div class="branch-no"><i class="ti ti-x" aria-hidden="true"></i> Rejected → vendor notified with specific reason → can reapply after resolving issue (e.g. clearer face photo).</div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#EAF3DE;color:#3B6D11">4</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Create product listings</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-plus" aria-hidden="true"></i><span>Taps "New listing" — multi-step form: photos (up to 5) → product details → pricing + stock qty + MOQ → location → review</span><span class="step-label lbl-user">vendor</span></div>
+      <div class="step system"><i class="ti ti-upload" aria-hidden="true"></i><span>Photos: GET /listings/upload-url → S3 presigned URL → Flutter uploads directly to S3 → CloudFront serves</span><span class="step-label lbl-ext">AWS S3</span></div>
+      <div class="step action"><i class="ti ti-send" aria-hidden="true"></i><span>Publishes listing — POST /seed/listings — status = 'active'</span><span class="step-label lbl-user">vendor</span></div>
+      <div class="step system"><i class="ti ti-search" aria-hidden="true"></i><span>tsvector search index updated — listing immediately searchable — Redis cache invalidated for affected category queries</span><span class="step-label lbl-auto">auto</span></div>
+    </div>
+    <div class="db-note">listings: id, vendor_id, status='active', images=[S3 URLs], price=kobo, moq</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#EAF3DE;color:#3B6D11">5</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Receive and fulfill orders</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-bell" aria-hidden="true"></i><span>Receives push notification: "New order from [buyer name]"</span><span class="step-label lbl-user">vendor</span></div>
+      <div class="step action"><i class="ti ti-eye" aria-hidden="true"></i><span>Reviews order — item, quantity, delivery address, total value</span><span class="step-label lbl-user">vendor</span></div>
+      <div class="step action"><i class="ti ti-check" aria-hidden="true"></i><span>Taps "Confirm order" — PATCH /orders/:id/status {status: 'confirmed'}</span><span class="step-label lbl-user">vendor</span></div>
+      <div class="step action"><i class="ti ti-truck" aria-hidden="true"></i><span>Arranges delivery (own logistics or partner) — enters tracking number or selects logistics partner (Phase 2)</span><span class="step-label lbl-user">vendor</span></div>
+      <div class="step action"><i class="ti ti-send" aria-hidden="true"></i><span>Marks as dispatched — buyer notified with tracking info</span><span class="step-label lbl-user">vendor</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#EAF3DE;color:#3B6D11">6</div></div>
+  <div class="stage-body">
+    <div class="stage-title">Payout</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-coin" aria-hidden="true"></i><span>Buyer confirms delivery → escrow_accounts.status = 'fully_released' → commission deducted → vendor_wallets.available_balance credited</span><span class="step-label lbl-auto">auto</span></div>
+      <div class="step action"><i class="ti ti-building-bank" aria-hidden="true"></i><span>Vendor taps "Withdraw" from wallet → enters amount (up to available_balance) → POST /payments/payout</span><span class="step-label lbl-user">vendor</span></div>
+      <div class="step system"><i class="ti ti-clock" aria-hidden="true"></i><span>payout_requests row created, status = 'pending' — nightly Lambda job processes pending payouts via Paystack transfer API → T+2 settlement to bank account</span><span class="step-label lbl-auto">Lambda</span></div>
+      <div class="step system"><i class="ti ti-bell" aria-hidden="true"></i><span>SMS + push notification: "₦XXX,XXX transferred to your [Bank Name] account"</span><span class="step-label lbl-auto">auto</span></div>
+    </div>
+    <div class="db-note">vendor_wallets: available_balance reduced | payout_requests: status='completed', provider_ref</div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- ENTERPRISE FLOW -->
+<div class="panel" id="panel-enterprise">
+<div class="flow-header">
+  <div class="flow-avatar" style="background:#FAEEDA">🏭</div>
+  <div><div class="flow-title">Enterprise trader — Bartar journey</div><div class="flow-sub">Exporters, cooperatives, bulk traders. From CAC verification to completed commodity deal with milestone payments.</div></div>
+</div>
+<div class="flow-stages">
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FAEEDA;color:#854F0B">1</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Enterprise registration + verification</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-forms" aria-hidden="true"></i><span>Registers on bartar.bianettechltd.com — company name, phone, email, password</span><span class="step-label lbl-user">enterprise</span></div>
+      <div class="step action"><i class="ti ti-file-certificate" aria-hidden="true"></i><span>Submits: CAC registration number, NEPC export license number, director BVN, company documents (uploaded to S3)</span><span class="step-label lbl-ext">KYC API</span></div>
+      <div class="step system"><i class="ti ti-building" aria-hidden="true"></i><span>CAC number verified via CAC API → NEPC number checked → director BVN cross-referenced against company docs</span><span class="step-label lbl-ext">ext. API</span></div>
+      <div class="step system"><i class="ti ti-clock" aria-hidden="true"></i><span>enterprise_accounts row created, approval_status = 'pending' — manual compliance review by Bia'net team</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step action"><i class="ti ti-mail" aria-hidden="true"></i><span>Receives email (Sendgrid): "Your application is under review — typically 2-3 business days"</span><span class="step-label lbl-auto">email</span></div>
+    </div>
+    <div class="db-note">enterprise_accounts: cac_verified, nepc_verified, approval_status='pending'</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FAEEDA;color:#854F0B">2A</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Seller path — post commodity offer</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-stack" aria-hidden="true"></i><span>Navigates to "My Offers" → clicks "New offer"</span><span class="step-label lbl-user">seller</span></div>
+      <div class="step action"><i class="ti ti-forms" aria-hidden="true"></i><span>Selects commodity type, grade, quantity (kg), price per kg, delivery terms (EXW/FOB/CIF), minimum lot size, location, expires_at, uploads lab report + cert of origin</span><span class="step-label lbl-user">seller</span></div>
+      <div class="step system"><i class="ti ti-database" aria-hidden="true"></i><span>POST /bartar/offers — commodity_offers row created, status = 'active' — immediately matchable against open RFQs</span><span class="step-label lbl-api">API</span></div>
+      <div class="step system"><i class="ti ti-cpu" aria-hidden="true"></i><span>Matching engine runs: queries rfq_requests where commodity_type, quantity range, grade overlap → rfq_matches rows created → buyers with matching RFQs notified</span><span class="step-label lbl-auto">matching</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FAEEDA;color:#854F0B">2B</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Buyer path — post RFQ + review matches</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-file-text" aria-hidden="true"></i><span>Navigates to "RFQs" → creates new RFQ: commodity type, grade, quantity needed, delivery date, price ceiling (optional), delivery state</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-cpu" aria-hidden="true"></i><span>POST /bartar/rfq → rfq_requests row created → matching engine runs → GET /bartar/match/:rfqId returns ranked offer list sorted by match_score</span><span class="step-label lbl-api">API</span></div>
+      <div class="step action"><i class="ti ti-list" aria-hidden="true"></i><span>Reviews matched offers — sees seller name (verified badge), location, grade, price, delivery terms, lab report, rating</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step action"><i class="ti ti-handshake" aria-hidden="true"></i><span>Clicks "Initiate deal" on preferred offer — opens deal creation form with pre-filled terms</span><span class="step-label lbl-user">buyer</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FAEEDA;color:#854F0B">3</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Deal negotiation + contract</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-file-plus" aria-hidden="true"></i><span>POST /bartar/deals — deals row created, status = 'negotiating', milestones jsonb auto-populated with 3-milestone template (30/40/30%)</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step action"><i class="ti ti-edit" aria-hidden="true"></i><span>Both parties negotiate terms in deal workspace — adjust price, quantity, delivery terms, milestone schedule</span><span class="step-label lbl-user">both</span></div>
+      <div class="step action"><i class="ti ti-check" aria-hidden="true"></i><span>Both parties click "Confirm deal terms" — deal status: 'contract_sent'</span><span class="step-label lbl-user">both</span></div>
+      <div class="step system"><i class="ti ti-file-text" aria-hidden="true"></i><span>Contract PDF auto-generated (PDFKit/Puppeteer) from deal terms — uploaded to S3 — signed URL emailed to both parties</span><span class="step-label lbl-auto">auto</span></div>
+      <div class="step action"><i class="ti ti-pen" aria-hidden="true"></i><span>Both parties click "Sign contract" in Bartar web app — deal status: 'contract_signed', digital acceptance logged to deal_events</span><span class="step-label lbl-user">both</span></div>
+    </div>
+    <div class="db-note">deals: status='contract_signed', contract_url=S3URL | deal_events: 2 rows (buyer_signed, seller_signed)</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FAEEDA;color:#854F0B">4</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Milestone payments + logistics</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-credit-card" aria-hidden="true"></i><span>Buyer pays 30% deposit via Paystack — POST /payments/initiate {entity_type:'deal', milestone_id} — escrow hold created</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-coin" aria-hidden="true"></i><span>Webhook confirms payment → escrow_accounts updated → deal status: 'deposit_paid' → seller notified via email + in-app</span><span class="step-label lbl-auto">auto</span></div>
+      <div class="step action"><i class="ti ti-truck" aria-hidden="true"></i><span>Seller ships commodity — enters logistics tracking reference — deal status: 'in_transit'</span><span class="step-label lbl-user">seller</span></div>
+      <div class="step action"><i class="ti ti-warehouse" aria-hidden="true"></i><span>Buyer confirms warehouse receipt — PATCH /deals/:id/status — triggers quality check milestone</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step action"><i class="ti ti-credit-card" aria-hidden="true"></i><span>Buyer pays 40% on receipt — escrow holds this amount — released to seller after quality confirmation</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step action"><i class="ti ti-check" aria-hidden="true"></i><span>Buyer confirms quality check passed — POST /deals/:id/confirm — final 30% payment initiated — deal status: 'completed'</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-coin" aria-hidden="true"></i><span>All escrow milestones released → 2-4% Bartar commission deducted per milestone → seller wallet credited total minus commission</span><span class="step-label lbl-auto">auto</span></div>
+    </div>
+    <div class="db-note">deals: status='completed' | commission_ledger: 3 rows (one per milestone) | vendor_wallets updated</div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- ADMIN FLOW -->
+<div class="panel" id="panel-admin">
+<div class="flow-header">
+  <div class="flow-avatar" style="background:#FAECE7">🛡️</div>
+  <div><div class="flow-title">Admin (Bia'net team) — daily operational flows</div><div class="flow-sub">Vendor approvals, KYC review, dispute resolution, payout oversight, platform monitoring.</div></div>
+</div>
+<div class="flow-stages">
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FAECE7;color:#993C1D">1</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Daily: vendor approval queue</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-login" aria-hidden="true"></i><span>Logs into admin.bianettechltd.com — admin JWT with separate secret key, IP whitelisted</span><span class="step-label lbl-user">admin</span></div>
+      <div class="step action"><i class="ti ti-list" aria-hidden="true"></i><span>Reviews vendor approval queue — sorted by application time, oldest first</span><span class="step-label lbl-user">admin</span></div>
+      <div class="step action"><i class="ti ti-eye" aria-hidden="true"></i><span>For each pending vendor: reviews KYC status checkmarks, views BVN match result, NIN match, face recognition confidence score, business details</span><span class="step-label lbl-user">admin</span></div>
+      <div class="step action"><i class="ti ti-file" aria-hidden="true"></i><span>Views uploaded documents (S3 presigned URL — 15 min expiry, never public)</span><span class="step-label lbl-ext">S3</span></div>
+    </div>
+    <div class="branch">
+      <div class="branch-yes"><i class="ti ti-check" aria-hidden="true"></i> Approves → PATCH /admin/vendors/:id/approve → vendor_profiles.approval_status='approved' → push + SMS to vendor: "Welcome to Seed!"</div>
+      <div class="branch-no"><i class="ti ti-x" aria-hidden="true"></i> Rejects → must enter reason (dropdown + freetext) → PATCH /admin/vendors/:id/reject → vendor notified with reason → kyc_records updated with manual_review_note.</div>
+    </div>
+    <div class="db-note">All admin actions logged: order_events or deal_events with actor_id = admin.user_id</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FAECE7;color:#993C1D">2</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">KYC manual review queue</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-id" aria-hidden="true"></i><span>Reviews failed KYC cases — vendor's submitted document vs provider failure reason (e.g. "face liveness low confidence: 0.62")</span><span class="step-label lbl-user">admin</span></div>
+      <div class="step action"><i class="ti ti-zoom-in" aria-hidden="true"></i><span>Views face capture image alongside NIN document photo — makes manual judgment</span><span class="step-label lbl-user">admin</span></div>
+    </div>
+    <div class="branch">
+      <div class="branch-yes"><i class="ti ti-check" aria-hidden="true"></i> Manual override approve → POST /admin/kyc/:id/override {verdict:'approved', note:'face photo angle issue, identity confirmed manually'} → kyc_records updated, vendor can proceed.</div>
+      <div class="branch-no"><i class="ti ti-x" aria-hidden="true"></i> Override reject → vendor asked to retake face photo or submit clearer NIN document.</div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FAECE7;color:#993C1D">3</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Dispute resolution (Seed orders)</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-alert-triangle" aria-hidden="true"></i><span>Dispute raised by buyer — disputes.status = 'open' — admin notified via dashboard alert</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step action"><i class="ti ti-messages" aria-hidden="true"></i><span>Admin reviews: order timeline, chat history, buyer evidence photos, vendor's response (within 48h SLA)</span><span class="step-label lbl-user">admin</span></div>
+      <div class="step action"><i class="ti ti-scale" aria-hidden="true"></i><span>Makes resolution decision — required to enter detailed resolution notes</span><span class="step-label lbl-user">admin</span></div>
+    </div>
+    <div class="branch">
+      <div class="branch-yes"><i class="ti ti-arrow-left" aria-hidden="true"></i> Resolve for buyer → POST /admin/disputes/:id/resolve {winner:'buyer'} → escrow refunded to buyer — vendor wallet not credited — order_events: dispute_resolved_buyer.</div>
+      <div class="branch-no"><i class="ti ti-arrow-right" aria-hidden="true"></i> Resolve for vendor → escrow released to vendor minus commission — order_events: dispute_resolved_vendor.</div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FAECE7;color:#993C1D">4</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Payout oversight</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-report" aria-hidden="true"></i><span>Reviews daily payout batch — checks total payout volume, failed payouts, unusual amounts</span><span class="step-label lbl-user">admin</span></div>
+      <div class="step action"><i class="ti ti-refresh" aria-hidden="true"></i><span>Manually retries failed payouts — POST /admin/payouts/:id/retry — re-queues in SQS payout processor</span><span class="step-label lbl-user">admin</span></div>
+      <div class="step action"><i class="ti ti-flag" aria-hidden="true"></i><span>Flags suspicious high-value payouts (above threshold) for secondary approval — system holds pending admin approve</span><span class="step-label lbl-user">admin</span></div>
+    </div>
+    <div class="db-note">payout_requests: status updated | commission_ledger: source of truth for revenue reporting</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FAECE7;color:#993C1D">5</div></div>
+  <div class="stage-body">
+    <div class="stage-title">Platform monitoring + commodity price feed</div>
+    <div class="stage-steps">
+      <div class="step action"><i class="ti ti-chart-bar" aria-hidden="true"></i><span>Reviews platform analytics: daily GMV (Seed + Bartar), active vendors, new users, dispute rate, commission earned</span><span class="step-label lbl-user">admin</span></div>
+      <div class="step action"><i class="ti ti-edit" aria-hidden="true"></i><span>Manually enters commodity price data for states where platform transaction volume is insufficient to auto-generate price feed</span><span class="step-label lbl-user">admin</span></div>
+      <div class="step system"><i class="ti ti-database" aria-hidden="true"></i><span>POST /admin/price-feed → commodity_price_feed row inserted with source='manual_input' — surfaces in Bartar market intelligence</span><span class="step-label lbl-api">API</span></div>
+      <div class="step action"><i class="ti ti-user-off" aria-hidden="true"></i><span>Suspends vendor or user if fraudulent behavior detected — PATCH /admin/users/:id {is_active: false} — all active listings auto-paused</span><span class="step-label lbl-user">admin</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- LOGISTICS FLOW -->
+<div class="panel" id="panel-logistics">
+<div class="flow-header">
+  <div class="flow-avatar" style="background:#EEEDFE">🚚</div>
+  <div><div class="flow-title">Logistics partner — integration flow (Phase 2)</div><div class="flow-sub">How GIG Logistics, Kwik, and other 3PL partners integrate with the Bia'net logistics coordination layer.</div></div>
+</div>
+<div class="flow-stages">
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#EEEDFE;color:#534AB7">1</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Partner onboarding</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-plug" aria-hidden="true"></i><span>Admin registers partner in logistics_partners table — name, api_base_url, encrypted API key (KMS), supported_states, integration_type = 'api'</span><span class="step-label lbl-sys">admin</span></div>
+      <div class="step system"><i class="ti ti-test-pipe" aria-hidden="true"></i><span>Test call to partner API: GET /partner-api/health — confirms connectivity, logs response time — partner is_active = true</span><span class="step-label lbl-ext">3PL API</span></div>
+    </div>
+    <div class="db-note">logistics_partners: id, name='GIG Logistics', api_key_encrypted, supported_states=['Lagos','Abuja',...]</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#EEEDFE;color:#534AB7">2</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Delivery quote request</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-calculator" aria-hidden="true"></i><span>When buyer reaches checkout → POST /logistics/quotes {from_state, to_state, weight_kg} → backend calls all active partners' quote APIs in parallel</span><span class="step-label lbl-api">API</span></div>
+      <div class="step system"><i class="ti ti-list" aria-hidden="true"></i><span>logistics_quotes rows created for each partner response — valid_until set to provider's quote expiry</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step action"><i class="ti ti-eye" aria-hidden="true"></i><span>Buyer sees ranked list of delivery options: price, ETA, provider name — selects preferred option</span><span class="step-label lbl-user">buyer</span></div>
+      <div class="step system"><i class="ti ti-check" aria-hidden="true"></i><span>Selected quote recorded — logistics_quotes.selected = true — delivery fee added to order total</span><span class="step-label lbl-sys">DB</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#EEEDFE;color:#534AB7">3</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Shipment creation + tracking</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-truck" aria-hidden="true"></i><span>When vendor marks order as dispatched → POST /partner-api/shipments {pickup, delivery, weight, order_ref} → partner creates shipment, returns tracking_number</span><span class="step-label lbl-ext">3PL API</span></div>
+      <div class="step system"><i class="ti ti-database" aria-hidden="true"></i><span>shipments row created: tracking_number, logistics_partner_id, status = 'picked_up', initial tracking_events array</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step system"><i class="ti ti-webhook" aria-hidden="true"></i><span>Partner fires status webhooks to POST /logistics/webhooks/:partnerId as package moves — events appended to shipments.tracking_events jsonb</span><span class="step-label lbl-ext">webhook</span></div>
+      <div class="step system"><i class="ti ti-bell" aria-hidden="true"></i><span>Key status changes (out_for_delivery, delivered) trigger buyer push notifications automatically</span><span class="step-label lbl-auto">async</span></div>
+    </div>
+    <div class="db-note">shipments: status updated via webhooks | tracking_events jsonb grows with each checkpoint</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#EEEDFE;color:#534AB7">4</div></div>
+  <div class="stage-body">
+    <div class="stage-title">Bartar bulk logistics coordination</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-package" aria-hidden="true"></i><span>Bartar deals trigger bulk shipment requests — same logistics abstraction layer, but quantity_kg is in tonnes, not kg — specialized freight quote endpoint</span><span class="step-label lbl-api">API</span></div>
+      <div class="step system"><i class="ti ti-file-certificate" aria-hidden="true"></i><span>For export deals: customs documentation generation — waybill, certificate of origin, phytosanitary cert auto-attached to deal as S3 documents (Phase 3)</span><span class="step-label lbl-auto">Phase 3</span></div>
+      <div class="step system"><i class="ti ti-map" aria-hidden="true"></i><span>Multi-leg shipment support — large deals may split across multiple trucks — each leg creates a separate shipments row, all linked to the same deal_id</span><span class="step-label lbl-sys">DB</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- AI / SYSTEM FLOW -->
+<div class="panel" id="panel-ai">
+<div class="flow-header">
+  <div class="flow-avatar" style="background:#FBEAF0">🤖</div>
+  <div><div class="flow-title">AI + background system flows</div><div class="flow-sub">How autonomous system processes run behind the scenes: recommendations, fraud detection, price feeds, payout processing.</div></div>
+</div>
+<div class="flow-stages">
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FBEAF0;color:#993556">1</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Recommendation engine (Phase 2 — Python / Google Cloud)</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-clock" aria-hidden="true"></i><span>Nightly batch job (Lambda): extracts last 30 days of orders and listing views from PostgreSQL → writes to BigQuery training dataset</span><span class="step-label lbl-auto">nightly</span></div>
+      <div class="step system"><i class="ti ti-brain" aria-hidden="true"></i><span>Vertex AI retrains collaborative filtering model on updated dataset — model artifact saved to GCS</span><span class="step-label lbl-auto">ML</span></div>
+      <div class="step system"><i class="ti ti-cloud-upload" aria-hidden="true"></i><span>New model deployed to Cloud Run Python inference endpoint — canary deployment (10% traffic) → full rollout after 24h</span><span class="step-label lbl-ext">GCP</span></div>
+      <div class="step system"><i class="ti ti-api" aria-hidden="true"></i><span>Node.js backend calls Python recommendation API: GET /recommendations/{userId}?limit=10 → returns ranked listing IDs → served on home screen</span><span class="step-label lbl-api">API</span></div>
+      <div class="step system"><i class="ti ti-clock" aria-hidden="true"></i><span>Recommendations cached in Redis per user (TTL: 1h) — not every page load hits the ML API</span><span class="step-label lbl-auto">cache</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FBEAF0;color:#993556">2</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Bartar RFQ matching engine (real-time)</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-cpu" aria-hidden="true"></i><span>Triggered on: new RFQ created OR new offer created — Node.js service queries PostgreSQL with multi-factor scoring</span><span class="step-label lbl-auto">event</span></div>
+      <div class="step system"><i class="ti ti-math-function" aria-hidden="true"></i><span>Scoring algorithm: commodity_type match (required) + grade overlap (weighted) + quantity range overlap (weighted) + |price - price_ceiling| normalized + location proximity score</span><span class="step-label lbl-auto">algo</span></div>
+      <div class="step system"><i class="ti ti-database" aria-hidden="true"></i><span>Top N matches (max 20) written to rfq_matches table with match_score + match_reason jsonb explaining score breakdown</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step system"><i class="ti ti-bell" aria-hidden="true"></i><span>Email notification to buyer: "X new matches found for your Sesame RFQ" — links to match list on Bartar web</span><span class="step-label lbl-auto">email</span></div>
+    </div>
+    <div class="db-note">rfq_matches: offer_id, rfq_id, match_score=0.87, match_reason={commodity:1.0,grade:0.9,qty:0.8,...}</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FBEAF0;color:#993556">3</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Commodity price feed ETL</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-clock" aria-hidden="true"></i><span>Daily ETL job (Lambda, runs 6am): aggregates previous day's completed deals by commodity_type + state → computes weighted avg price per kg</span><span class="step-label lbl-auto">daily</span></div>
+      <div class="step system"><i class="ti ti-database" aria-hidden="true"></i><span>Inserts rows into commodity_price_feed (append-only) — source = 'platform_transaction' — feeds Bartar market intelligence dashboard</span><span class="step-label lbl-sys">DB</span></div>
+      <div class="step system"><i class="ti ti-alert-triangle" aria-hidden="true"></i><span>Anomaly check: if today's price deviates >20% from 7-day average → flag for admin review, do not publish to dashboard automatically</span><span class="step-label lbl-auto">guard</span></div>
+      <div class="step system"><i class="ti ti-chart-line" aria-hidden="true"></i><span>BigQuery sync job exports 90-day price history for analytics API access (enterprise subscribers, Phase 3)</span><span class="step-label lbl-auto">Phase 3</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FBEAF0;color:#993556">4</div><div class="stage-line" style="background:var(--color-border-tertiary)"></div></div>
+  <div class="stage-body">
+    <div class="stage-title">Nightly payout processor (Lambda)</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-clock" aria-hidden="true"></i><span>Lambda runs nightly at 11pm → queries payout_requests WHERE status='pending' AND created_at <= NOW() - INTERVAL 2 days (T+2)</span><span class="step-label lbl-auto">Lambda</span></div>
+      <div class="step system"><i class="ti ti-shield-check" aria-hidden="true"></i><span>Threshold check: payouts above ₦5M flagged for admin secondary approval — not processed automatically</span><span class="step-label lbl-auto">guard</span></div>
+      <div class="step system"><i class="ti ti-external-link" aria-hidden="true"></i><span>For each eligible payout: POST to Paystack Transfer API → receives transfer_code → status updated to 'processing'</span><span class="step-label lbl-ext">Paystack</span></div>
+      <div class="step system"><i class="ti ti-webhook" aria-hidden="true"></i><span>Paystack fires transfer.success / transfer.failed webhook → payout_requests.status = 'completed' or 'failed' → vendor notified</span><span class="step-label lbl-auto">webhook</span></div>
+      <div class="step system"><i class="ti ti-refresh" aria-hidden="true"></i><span>Failed payouts: retried next night (up to 3 attempts) → after 3 failures, escalated to admin with error details from Paystack response</span><span class="step-label lbl-auto">retry</span></div>
+    </div>
+    <div class="db-note">payout_requests: status='completed', provider_ref | vendor_wallets: available_balance reduced</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-left"><div class="stage-num" style="background:#FBEAF0;color:#993556">5</div></div>
+  <div class="stage-body">
+    <div class="stage-title">Payment reconciliation (daily)</div>
+    <div class="stage-steps">
+      <div class="step system"><i class="ti ti-report" aria-hidden="true"></i><span>Lambda job at 1am: fetches previous day's Paystack transaction report (CSV via API) → cross-references with payment_transactions in DB</span><span class="step-label lbl-auto">daily</span></div>
+      <div class="step system"><i class="ti ti-alert-circle" aria-hidden="true"></i><span>Discrepancies flagged: transactions in Paystack report not in DB (missed webhooks) → creates recovery job to process them → admin alerted</span><span class="step-label lbl-auto">alert</span></div>
+      <div class="step system"><i class="ti ti-mail" aria-hidden="true"></i><span>Daily reconciliation summary emailed to finance admin: total received, total escrowed, total released, total commission, net settlement</span><span class="step-label lbl-auto">email</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>

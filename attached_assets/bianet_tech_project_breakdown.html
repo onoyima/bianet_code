@@ -1,0 +1,614 @@
+
+<h2 class="sr-only">Bia'net Tech Ltd. — Full Project Breakdown by Phase and MVP</h2>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-size: 14px; color: var(--color-text-primary); }
+.hero { padding: 1.5rem 0 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 1.5rem; }
+.hero h1 { font-size: 20px; font-weight: 500; }
+.hero p { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; }
+.tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.tab { padding: 6px 14px; font-size: 13px; border: 0.5px solid var(--color-border-secondary); border-radius: 20px; cursor: pointer; background: transparent; color: var(--color-text-secondary); transition: all .15s; white-space: nowrap; }
+.tab:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+.tab.active { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+.panel { display: none; }
+.panel.active { display: block; }
+.phase-header { display: flex; align-items: flex-start; gap: 14px; padding: 1rem 1.25rem; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); margin-bottom: 1rem; }
+.phase-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.p1 .phase-num { background: #E6F1FB; color: #185FA5; }
+.p2 .phase-num { background: #EAF3DE; color: #3B6D11; }
+.p3 .phase-num { background: #FAEEDA; color: #854F0B; }
+.p4 .phase-num { background: #EEEDFE; color: #534AB7; }
+.phase-header h2 { font-size: 16px; font-weight: 500; margin-bottom: 3px; }
+.phase-header p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+.timeline-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-top: 6px; display: inline-block; }
+.p1 .timeline-badge { background: #E6F1FB; color: #185FA5; }
+.p2 .timeline-badge { background: #EAF3DE; color: #3B6D11; }
+.p3 .timeline-badge { background: #FAEEDA; color: #854F0B; }
+.p4 .timeline-badge { background: #EEEDFE; color: #534AB7; }
+.section-label { font-size: 11px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--color-text-secondary); margin: 1.25rem 0 .5rem; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: .875rem 1rem; }
+.card h3 { font-size: 13px; font-weight: 500; margin-bottom: 6px; display: flex; align-items: center; gap: 7px; }
+.card ul { list-style: none; padding: 0; }
+.card ul li { font-size: 12px; color: var(--color-text-secondary); padding: 3px 0; border-bottom: 0.5px solid var(--color-border-tertiary); line-height: 1.5; }
+.card ul li:last-child { border-bottom: none; }
+.card ul li::before { content: "–  "; color: var(--color-text-secondary); }
+.stack-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tag { font-size: 11px; padding: 3px 9px; border-radius: 10px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); }
+.tag.fe { background: #E6F1FB; color: #185FA5; border-color: #B5D4F4; }
+.tag.be { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
+.tag.db { background: #FAEEDA; color: #854F0B; border-color: #FAC775; }
+.tag.cloud { background: #EEEDFE; color: #534AB7; border-color: #CECBF6; }
+.tag.ai { background: #FAECE7; color: #993C1D; border-color: #F5C4B3; }
+.tag.sec { background: #FBEAF0; color: #993556; border-color: #F4C0D1; }
+.deliverable { display: flex; align-items: flex-start; gap: 10px; padding: .75rem 1rem; background: var(--color-background-secondary); border-radius: var(--border-radius-md); margin-bottom: 6px; }
+.deliverable .check { width: 20px; height: 20px; border-radius: 50%; background: var(--color-background-success); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.deliverable .check i { font-size: 12px; color: var(--color-text-success); }
+.deliverable p { font-size: 13px; }
+.deliverable span { font-size: 11px; color: var(--color-text-secondary); }
+.endpoint-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: .75rem 1rem; margin-bottom: 6px; }
+.endpoint-card .method { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 4px; margin-right: 8px; font-family: var(--font-mono); }
+.method.post { background: #EAF3DE; color: #3B6D11; }
+.method.get { background: #E6F1FB; color: #185FA5; }
+.method.put { background: #FAEEDA; color: #854F0B; }
+.method.delete { background: #FCEBEB; color: #A32D2D; }
+.endpoint-card .route { font-family: var(--font-mono); font-size: 12px; }
+.endpoint-card p { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+.schema-box { font-family: var(--font-mono); font-size: 11px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: .75rem 1rem; line-height: 1.7; color: var(--color-text-secondary); overflow-x: auto; margin-bottom: 6px; }
+.schema-box .key { color: var(--color-text-info); }
+.schema-box .type { color: var(--color-text-warning); }
+.schema-box .comment { color: var(--color-text-success); }
+.metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 1rem; }
+.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: .875rem 1rem; }
+.metric .label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.metric .value { font-size: 18px; font-weight: 500; }
+.milestone-row { display: flex; align-items: flex-start; gap: 12px; padding: .875rem 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.milestone-row:last-child { border-bottom: none; }
+.ms-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.ms-dot.q1 { background: #185FA5; }
+.ms-dot.q2 { background: #3B6D11; }
+.ms-dot.q3 { background: #854F0B; }
+.ms-dot.q4 { background: #534AB7; }
+.ms-dot.y2 { background: #993C1D; }
+.ms-dot.y3 { background: #993556; }
+.milestone-row .ms-label { font-size: 11px; font-weight: 500; min-width: 52px; color: var(--color-text-secondary); margin-top: 1px; }
+.milestone-row p { font-size: 13px; }
+.milestone-row span { font-size: 12px; color: var(--color-text-secondary); }
+.risk-row { display: flex; align-items: flex-start; gap: 12px; padding: .75rem 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.risk-row:last-child { border-bottom: none; }
+.risk-badge { font-size: 10px; padding: 2px 7px; border-radius: 8px; flex-shrink: 0; white-space: nowrap; margin-top: 2px; }
+.high { background: #FCEBEB; color: #A32D2D; }
+.medium { background: #FAEEDA; color: #854F0B; }
+.low { background: #EAF3DE; color: #3B6D11; }
+.risk-row p { font-size: 13px; }
+.risk-row span { font-size: 12px; color: var(--color-text-secondary); }
+</style>
+
+<div class="hero">
+  <h1>Bia'net Tech Ltd. — Developer Breakdown</h1>
+  <p>Full project architecture, MVP specs, backend API design, and phase-by-phase build plan</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('overview')">Project overview</button>
+  <button class="tab" onclick="show('mvp1')">MVP 1 — Seed</button>
+  <button class="tab" onclick="show('mvp2')">MVP 2 — Bartar</button>
+  <button class="tab" onclick="show('backend')">Backend & APIs</button>
+  <button class="tab" onclick="show('infra')">Infrastructure</button>
+  <button class="tab" onclick="show('roadmap')">Roadmap & risks</button>
+</div>
+
+<!-- OVERVIEW -->
+<div class="panel active" id="panel-overview">
+
+  <div class="phase-header p1">
+    <div class="phase-num">1</div>
+    <div>
+      <h2>Two platforms, one ecosystem</h2>
+      <p>Bia'net Tech is not a single app. It's a technology infrastructure layer with two distinct platforms — Seed (B2C/B2B marketplace) and Bartar (commodity exchange). They share auth, user identity, logistics, and AI layers but have separate UIs and business logic.</p>
+      <span class="timeline-badge">Total build: ~24 months to full v1</span>
+    </div>
+  </div>
+
+  <div class="section-label">Platforms at a glance</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3><i class="ti ti-plant-2" aria-hidden="true"></i> Seed — agricultural marketplace</h3>
+      <ul>
+        <li>Connects farmers, wholesalers, retailers, exporters, consumers</li>
+        <li>Product listings, verified vendor onboarding, real-time orders</li>
+        <li>3–5% commission on completed transactions</li>
+        <li>Subscription tiers for advanced seller tools and analytics</li>
+        <li>Sponsored listings and in-app advertising</li>
+        <li>B2C + B2B model, mobile-first</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-exchange" aria-hidden="true"></i> Bartar — commodity exchange</h3>
+      <ul>
+        <li>Bulk trade coordination — grains, sesame, cassava, cocoa, ginger, rice</li>
+        <li>Cross-border export coordination and NEPC verification</li>
+        <li>2–4% commission on bulk commodity trades</li>
+        <li>Enterprise dashboards, market intelligence subscriptions</li>
+        <li>Logistics coordination fees for bulk and export shipments</li>
+        <li>B2B focused, enterprise-grade tooling</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">Shared infrastructure</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3><i class="ti ti-shield-check" aria-hidden="true"></i> Identity & verification layer</h3>
+      <ul>
+        <li>BVN, NIN verification via third-party APIs</li>
+        <li>NEPC export license verification</li>
+        <li>Face recognition for vendor identity</li>
+        <li>Multi-factor authentication (SMS + TOTP)</li>
+        <li>Unified auth used by both Seed and Bartar</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-truck" aria-hidden="true"></i> Logistics coordination layer</h3>
+      <ul>
+        <li>Partner logistics provider integration (not owning fleet)</li>
+        <li>Delivery tracking and status webhooks</li>
+        <li>Bulk shipment coordination for Bartar</li>
+        <li>Dispatch coordination API used by both platforms</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-brain" aria-hidden="true"></i> AI/ML layer</h3>
+      <ul>
+        <li>Product and trade recommendations (TensorFlow + Python)</li>
+        <li>Pricing analytics and market intelligence</li>
+        <li>Fraud detection and anomaly flagging</li>
+        <li>Demand forecasting for commodity traders</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-credit-card" aria-hidden="true"></i> Payments layer</h3>
+      <ul>
+        <li>Paystack / Flutterwave integration for NGN transactions</li>
+        <li>Escrow logic for large commodity trades</li>
+        <li>Commission auto-deduction on transaction completion</li>
+        <li>Payout schedules for verified vendors</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">Technology stack</div>
+  <div class="card">
+    <div class="stack-row">
+      <span class="tag fe">Flutter (mobile)</span>
+      <span class="tag fe">React (web dashboard)</span>
+      <span class="tag be">Node.js (Express/Fastify)</span>
+      <span class="tag be">Python (AI/ML + analytics)</span>
+      <span class="tag db">PostgreSQL</span>
+      <span class="tag db">MongoDB</span>
+      <span class="tag cloud">AWS (primary)</span>
+      <span class="tag cloud">Google Cloud (AI services)</span>
+      <span class="tag ai">TensorFlow</span>
+      <span class="tag ai">Python analytics</span>
+      <span class="tag sec">End-to-end encryption</span>
+      <span class="tag sec">MFA</span>
+      <span class="tag sec">Penetration testing</span>
+    </div>
+  </div>
+</div>
+
+<!-- MVP 1 -->
+<div class="panel" id="panel-mvp1">
+  <div class="phase-header p1">
+    <div class="phase-num">M1</div>
+    <div>
+      <h2>MVP 1 — Seed marketplace (Q1 2027)</h2>
+      <p>The first thing users ever touch. Goal is to onboard verified vendors, enable product listings, process real transactions, and prove the marketplace model works before building complexity. Keep scope ruthlessly small — no AI, no subscriptions, no ads in MVP 1.</p>
+      <span class="timeline-badge">Target: Q1 2027 launch → Lagos & Abuja initial</span>
+    </div>
+  </div>
+
+  <div class="section-label">What MVP 1 must do (no more, no less)</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3><i class="ti ti-user-check" aria-hidden="true"></i> Vendor onboarding</h3>
+      <ul>
+        <li>Vendor registers with phone number + BVN/NIN verification</li>
+        <li>Face recognition liveness check via third-party API</li>
+        <li>Business name, category, location, bank account</li>
+        <li>Admin approval queue — no vendor goes live unreviewed</li>
+        <li>Vendor dashboard: active listings, orders, earnings</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-package" aria-hidden="true"></i> Product listings</h3>
+      <ul>
+        <li>Create, edit, pause, delete product listings</li>
+        <li>Category taxonomy: vegetables, grains, fruits, livestock, equipment</li>
+        <li>Photos (up to 5), description, price, unit, MOQ, location</li>
+        <li>Availability status (in stock / out of stock)</li>
+        <li>No auction in MVP 1 — fixed price only</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-shopping-cart" aria-hidden="true"></i> Buyer experience</h3>
+      <ul>
+        <li>Browse and search by category, location, price</li>
+        <li>Buyer registers with phone + OTP (lighter KYC than vendor)</li>
+        <li>Add to cart, place order, view order status</li>
+        <li>In-app messaging between buyer and vendor</li>
+        <li>Order tracking after dispatch</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-credit-card" aria-hidden="true"></i> Payments & commissions</h3>
+      <ul>
+        <li>Paystack or Flutterwave integration — NGN only at launch</li>
+        <li>Escrow: funds held until buyer confirms delivery</li>
+        <li>Platform deducts 3–5% commission on release</li>
+        <li>Vendor payout: T+2 to registered bank account</li>
+        <li>Transaction receipts emailed and in-app</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">MVP 1 deliverables (as a developer)</div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>Flutter mobile app (Android first, iOS alongside)</p><span>Buyer flow + vendor dashboard as separate tab/role views in one app</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>React admin web dashboard</p><span>Internal team only: vendor approvals, dispute resolution, payout management, transaction oversight</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>Node.js REST API (monolith to start, modular for later split)</p><span>Auth, users, listings, orders, payments, notifications — all in one deployable initially</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>PostgreSQL schema — users, vendors, listings, orders, transactions, disputes</p><span>Designed for scale from day one: UUIDs, soft deletes, audit timestamps</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>SMS OTP service (Termii or AfricasTalking)</p><span>Nigerian phone number verification at registration and on login</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>BVN/NIN verification integration</p><span>Mono, Okra, or Smile Identity API — budget ~₦50–80/verification</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>Push notifications (Firebase FCM)</p><span>Order updates, message alerts, payout confirmations</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>Basic in-app messaging system</p><span>Buyer ↔ vendor only. No group chats in MVP 1. Socket.io for real-time</span></div></div>
+
+  <div class="section-label">What is NOT in MVP 1</div>
+  <div class="card">
+    <ul>
+      <li>No AI recommendations — add in Phase 2</li>
+      <li>No subscription tiers — launch free, monetize via commissions only</li>
+      <li>No ads or featured listings — Phase 2</li>
+      <li>No Bartar commodity exchange — that is MVP 2</li>
+      <li>No cross-border/export features — Phase 3</li>
+      <li>No logistics partner integration — vendor arranges own delivery for MVP, platform just tracks</li>
+      <li>No web storefront for vendors — mobile app only initially</li>
+    </ul>
+  </div>
+
+  <div class="section-label">MVP 1 success metrics</div>
+  <div class="metric-row">
+    <div class="metric"><div class="label">Verified vendors</div><div class="value">500+</div></div>
+    <div class="metric"><div class="label">Active listings</div><div class="value">2,000+</div></div>
+    <div class="metric"><div class="label">Completed transactions</div><div class="value">1,000+</div></div>
+    <div class="metric"><div class="label">GMV (Month 3)</div><div class="value">₦500M+</div></div>
+    <div class="metric"><div class="label">Dispute rate</div><div class="value">&lt;5%</div></div>
+  </div>
+</div>
+
+<!-- MVP 2 -->
+<div class="panel" id="panel-mvp2">
+  <div class="phase-header p2">
+    <div class="phase-num">M2</div>
+    <div>
+      <h2>MVP 2 — Bartar commodity exchange (Q3 2027)</h2>
+      <p>Built after Seed is stable and generating data. Bartar is a different product — it's enterprise B2B. The buyer is a trader or exporter, the seller is a cooperative or large producer, and the transaction size is 10–100x larger. Different UX, different KYC, different trust infrastructure.</p>
+      <span class="timeline-badge">Target: Q3 2027 launch → commodity exchange rollout</span>
+    </div>
+  </div>
+
+  <div class="section-label">What MVP 2 must do</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3><i class="ti ti-building-store" aria-hidden="true"></i> Commodity listings & RFQs</h3>
+      <ul>
+        <li>Sellers post bulk commodity offers: commodity type, grade, quantity, location, price/kg or per tonne</li>
+        <li>Buyers post Request for Quotes (RFQs) — system matches to sellers</li>
+        <li>Supported commodities at launch: maize, rice, sesame, cassava, cocoa, ginger, groundnuts</li>
+        <li>Offer expiry, minimum lot sizes, delivery terms</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-license" aria-hidden="true"></i> Enterprise KYC & verification</h3>
+      <ul>
+        <li>CAC registration number verification</li>
+        <li>NEPC export license verification for exporters</li>
+        <li>Cooperative registration documents</li>
+        <li>Director BVN/NIN cross-check</li>
+        <li>Manual review by Bia'net compliance team before approval</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-file-invoice" aria-hidden="true"></i> Trade coordination workflow</h3>
+      <ul>
+        <li>Offer → Negotiation → Deal confirmation → Contract generation</li>
+        <li>Digital trade contracts with PDF export</li>
+        <li>Milestone-based payment release (deposit, delivery, confirmation)</li>
+        <li>Dispute escalation with document evidence upload</li>
+        <li>Audit trail on every action — legally defensible</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-chart-bar" aria-hidden="true"></i> Market intelligence dashboard</h3>
+      <ul>
+        <li>Live commodity price feeds by region and grade</li>
+        <li>Historical price charts (weekly, monthly, seasonal)</li>
+        <li>Supply and demand indicators per commodity</li>
+        <li>Exportable reports for enterprise subscribers</li>
+        <li>Data sourced from platform transactions + external feeds</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">MVP 2 deliverables (as a developer)</div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>Bartar web application (React) — enterprise buyers/sellers prefer desktop</p><span>Mobile companion app added post-launch. Web-first for Bartar unlike Seed</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>RFQ and offer matching engine</p><span>Algorithm matches RFQs to active offers based on commodity type, quantity, location, grade. PostgreSQL full-text search + scoring</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>Contract generation system</p><span>Template-based PDF contract auto-populated from deal terms. Node.js + PDFKit or Puppeteer</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>Escrow and milestone payment system</p><span>More complex than Seed — multiple release triggers, partial payouts, hold periods. Separate payment service module</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>CAC/NEPC verification integration</p><span>NIMC for NIN, CAC API for company verification, NEPC export license check (manual initially if no API available)</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>Market intelligence data pipeline</p><span>Python ETL jobs aggregating transaction data into price feeds. PostgreSQL time-series tables. Recharts on the frontend</span></div></div>
+  <div class="deliverable"><div class="check"><i class="ti ti-check"></i></div><div><p>Bartar notification system</p><span>Email (Sendgrid/AWS SES) + in-app. More email-heavy than Seed since users are enterprise, not mobile-first</span></div></div>
+
+  <div class="section-label">MVP 2 success metrics</div>
+  <div class="metric-row">
+    <div class="metric"><div class="label">Enterprise accounts</div><div class="value">100+</div></div>
+    <div class="metric"><div class="label">Trades coordinated</div><div class="value">200+</div></div>
+    <div class="metric"><div class="label">GMV on Bartar</div><div class="value">₦5B+</div></div>
+    <div class="metric"><div class="label">Avg deal size</div><div class="value">₦25M+</div></div>
+  </div>
+</div>
+
+<!-- BACKEND -->
+<div class="panel" id="panel-backend">
+  <div class="phase-header p3">
+    <div class="phase-num">BE</div>
+    <div>
+      <h2>Backend architecture & API design</h2>
+      <p>Start as a modular monolith on Node.js (Fastify preferred over Express for performance). Each domain is a self-contained module. When transaction volume justifies it (around Phase 3), split high-load modules into microservices. This avoids premature complexity while keeping the future path open.</p>
+      <span class="timeline-badge">Monolith → modular → microservices on scale</span>
+    </div>
+  </div>
+
+  <div class="section-label">Core API modules</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3><i class="ti ti-lock" aria-hidden="true"></i> Auth service</h3>
+      <ul>
+        <li>POST /auth/register → phone + OTP flow</li>
+        <li>POST /auth/verify-otp → issue JWT + refresh token</li>
+        <li>POST /auth/login</li>
+        <li>POST /auth/refresh</li>
+        <li>POST /auth/logout (revoke refresh token)</li>
+        <li>POST /auth/mfa/setup and /verify</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-user" aria-hidden="true"></i> User & vendor service</h3>
+      <ul>
+        <li>POST /vendors/apply — submit vendor application</li>
+        <li>PATCH /vendors/:id/approve — admin only</li>
+        <li>GET /vendors/:id/profile</li>
+        <li>POST /kyc/bvn-verify, /kyc/nin-verify</li>
+        <li>POST /kyc/face-check — third-party liveness API proxy</li>
+        <li>GET /users/:id/dashboard — aggregated stats</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-package" aria-hidden="true"></i> Listings service (Seed)</h3>
+      <ul>
+        <li>POST /listings — create new product listing</li>
+        <li>GET /listings — search with filters (category, location, price range)</li>
+        <li>GET /listings/:id</li>
+        <li>PATCH /listings/:id — update listing</li>
+        <li>DELETE /listings/:id — soft delete</li>
+        <li>POST /listings/:id/images — upload up to 5 photos (S3)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-shopping-bag" aria-hidden="true"></i> Orders service</h3>
+      <ul>
+        <li>POST /orders — create order from cart</li>
+        <li>GET /orders/:id — order detail + status</li>
+        <li>PATCH /orders/:id/status — vendor confirms, dispatches</li>
+        <li>POST /orders/:id/confirm-delivery — buyer confirms</li>
+        <li>POST /orders/:id/dispute — raise dispute</li>
+        <li>Webhooks: order.created, order.paid, order.delivered</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-credit-card" aria-hidden="true"></i> Payments service</h3>
+      <ul>
+        <li>POST /payments/initiate — returns payment link (Paystack)</li>
+        <li>POST /payments/webhook — Paystack callback handler</li>
+        <li>POST /payments/escrow/release — trigger on delivery confirm</li>
+        <li>POST /payments/payout — vendor withdrawal to bank</li>
+        <li>GET /payments/transactions — ledger for user or vendor</li>
+        <li>Commission deduction logic runs here, not in orders service</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-exchange" aria-hidden="true"></i> Commodity service (Bartar)</h3>
+      <ul>
+        <li>POST /commodities/offers — create bulk offer</li>
+        <li>POST /commodities/rfq — post request for quote</li>
+        <li>GET /commodities/match/:rfqId — get matched offers</li>
+        <li>POST /deals — initiate deal from offer + RFQ match</li>
+        <li>PATCH /deals/:id/confirm — both parties confirm</li>
+        <li>GET /commodities/prices — live price feed by commodity + region</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">Key database schemas</div>
+  <div class="schema-box">
+    <span class="comment">-- Users table (shared across Seed and Bartar)</span><br>
+    <span class="key">users</span>: id (uuid), phone, email, role (<span class="type">buyer|vendor|enterprise|admin</span>),<br>
+    &nbsp;&nbsp;kyc_status (<span class="type">pending|verified|rejected</span>), bvn_verified (bool),<br>
+    &nbsp;&nbsp;nin_verified (bool), face_verified (bool), created_at, updated_at<br><br>
+    <span class="comment">-- Vendor profiles</span><br>
+    <span class="key">vendors</span>: id, user_id (fk), business_name, category, state, lga,<br>
+    &nbsp;&nbsp;bank_account_no, bank_code, approval_status, rating, total_sales<br><br>
+    <span class="comment">-- Product listings</span><br>
+    <span class="key">listings</span>: id, vendor_id (fk), title, category, price, unit, moq,<br>
+    &nbsp;&nbsp;stock_status, description, images (jsonb), location, deleted_at<br><br>
+    <span class="comment">-- Orders</span><br>
+    <span class="key">orders</span>: id, buyer_id, vendor_id, listing_id, quantity, unit_price,<br>
+    &nbsp;&nbsp;total_amount, commission_amount, status, delivery_address, dispute_id<br><br>
+    <span class="comment">-- Commodity deals (Bartar)</span><br>
+    <span class="key">deals</span>: id, offer_id, rfq_id, seller_id, buyer_id, commodity, grade,<br>
+    &nbsp;&nbsp;quantity_kg, price_per_kg, total_value, contract_url, milestones (jsonb),<br>
+    &nbsp;&nbsp;status (<span class="type">negotiating|confirmed|in_transit|completed|disputed</span>)
+  </div>
+
+  <div class="section-label">Critical API endpoints — MVP 1 day-1 list</div>
+  <div class="endpoint-card"><span class="method post">POST</span><span class="route">/auth/register</span><p>Phone number + OTP initiation. Required before any other action.</p></div>
+  <div class="endpoint-card"><span class="method post">POST</span><span class="route">/vendors/apply</span><p>Vendor submits business details + KYC docs. Triggers BVN/NIN verification calls.</p></div>
+  <div class="endpoint-card"><span class="method get">GET</span><span class="route">/listings?category=&location=&minPrice=&maxPrice=</span><p>Public endpoint. Full-text search + filter. Paginated. Redis cache on popular queries.</p></div>
+  <div class="endpoint-card"><span class="method post">POST</span><span class="route">/orders</span><p>Authenticated buyer only. Creates order, initiates escrow payment hold via Paystack.</p></div>
+  <div class="endpoint-card"><span class="method post">POST</span><span class="route">/orders/:id/confirm-delivery</span><p>Buyer confirms. Triggers automatic escrow release and vendor payout scheduling.</p></div>
+  <div class="endpoint-card"><span class="method post">POST</span><span class="route">/payments/webhook</span><p>Paystack webhook. Must be idempotent — use payment reference as dedup key.</p></div>
+</div>
+
+<!-- INFRASTRUCTURE -->
+<div class="panel" id="panel-infra">
+  <div class="phase-header p4">
+    <div class="phase-num">☁</div>
+    <div>
+      <h2>Infrastructure & DevOps</h2>
+      <p>AWS as primary cloud. Start small, scale automatically. The key principle: design for scale from day one even if you deploy modestly at launch. Use managed services wherever possible — you don't have the team to run your own Kafka cluster or Redis Sentinel in Phase 1.</p>
+      <span class="timeline-badge">AWS-primary, Google Cloud for AI/ML services</span>
+    </div>
+  </div>
+
+  <div class="section-label">AWS services to use</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3><i class="ti ti-server" aria-hidden="true"></i> Compute</h3>
+      <ul>
+        <li>ECS Fargate — containerised Node.js API. No server management</li>
+        <li>EC2 (t3.medium) — Python AI/ML workers initially</li>
+        <li>Lambda — lightweight async jobs (commission calc, payout scheduling, email dispatch)</li>
+        <li>Auto Scaling Groups on ECS when traffic spikes</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-database" aria-hidden="true"></i> Data</h3>
+      <ul>
+        <li>RDS PostgreSQL (db.t3.medium, Multi-AZ for production)</li>
+        <li>MongoDB Atlas — unstructured data: chat messages, activity logs, product reviews</li>
+        <li>ElastiCache Redis — session tokens, listing search cache, rate limiting</li>
+        <li>S3 — product images, vendor documents, trade contracts (PDFs)</li>
+        <li>CloudFront CDN in front of S3 for image delivery</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-arrows-exchange" aria-hidden="true"></i> Messaging & queues</h3>
+      <ul>
+        <li>SQS — async job queues (payouts, KYC callbacks, notifications)</li>
+        <li>SNS — fan-out events to multiple consumers</li>
+        <li>EventBridge — internal domain events (order.created → payment service)</li>
+        <li>Socket.io on ECS for real-time chat and notifications</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-eye" aria-hidden="true"></i> Observability</h3>
+      <ul>
+        <li>CloudWatch — logs, metrics, alarms</li>
+        <li>X-Ray — distributed tracing across services</li>
+        <li>Sentry — error tracking for Node.js and Flutter</li>
+        <li>Uptime checks — Route53 health checks on API endpoints</li>
+        <li>Dashboards for: transaction volume, error rates, payout status</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-shield" aria-hidden="true"></i> Security</h3>
+      <ul>
+        <li>WAF (Web Application Firewall) — rate limiting, SQL injection protection</li>
+        <li>VPC with private subnets — DB never publicly accessible</li>
+        <li>Secrets Manager — API keys, DB credentials, payment keys</li>
+        <li>KMS encryption for data at rest (S3, RDS)</li>
+        <li>SSL/TLS everywhere — ACM certificates via ALB</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><i class="ti ti-git-branch" aria-hidden="true"></i> CI/CD</h3>
+      <ul>
+        <li>GitHub Actions — automated test, lint, build on PR</li>
+        <li>Docker images pushed to ECR on merge to main</li>
+        <li>ECS rolling deployments — zero downtime updates</li>
+        <li>Staging environment mirrors production exactly</li>
+        <li>Database migrations: node-migrate or Flyway</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">Google Cloud — AI/ML layer</div>
+  <div class="card">
+    <ul>
+      <li>Vertex AI — hosted TensorFlow model training and serving for recommendation engine</li>
+      <li>Cloud Run — Python inference endpoints (recommendations API called by Node.js backend)</li>
+      <li>BigQuery — analytical queries on transaction data for market intelligence reports</li>
+      <li>Vision AI — supplementary image moderation for product listings (flags inappropriate uploads)</li>
+    </ul>
+  </div>
+
+  <div class="section-label">Phase 1 infra cost estimate (monthly)</div>
+  <div class="metric-row">
+    <div class="metric"><div class="label">ECS Fargate (2 tasks)</div><div class="value">~$120</div></div>
+    <div class="metric"><div class="label">RDS PostgreSQL</div><div class="value">~$85</div></div>
+    <div class="metric"><div class="label">ElastiCache Redis</div><div class="value">~$35</div></div>
+    <div class="metric"><div class="label">S3 + CloudFront</div><div class="value">~$25</div></div>
+    <div class="metric"><div class="label">SQS + SNS + Lambda</div><div class="value">~$15</div></div>
+    <div class="metric"><div class="label">Total (Phase 1)</div><div class="value">~$280</div></div>
+  </div>
+</div>
+
+<!-- ROADMAP -->
+<div class="panel" id="panel-roadmap">
+  <div class="phase-header p2">
+    <div class="phase-num">R</div>
+    <div>
+      <h2>Full roadmap & risk register</h2>
+      <p>Four development phases spanning 2027–2030. Each phase builds on the previous. Phase 1 is MVP 1 (Seed launch). Phase 2 adds Bartar + AI layer. Phase 3 adds logistics integration + subscriptions. Phase 4 is cross-border expansion.</p>
+    </div>
+  </div>
+
+  <div class="section-label">Development milestones</div>
+  <div class="milestone-row"><span class="ms-dot q1"></span><span class="ms-label">Q1 2027</span><div><p>MVP 1 live — Seed marketplace in Lagos and Abuja</p><span>500 vendors, basic listings, orders, payments, escrow, admin dashboard</span></div></div>
+  <div class="milestone-row"><span class="ms-dot q2"></span><span class="ms-label">Q2 2027</span><div><p>Seed expansion — 6 Nigerian states, Kano + Rivers added</p><span>Subscription tier launch (basic + pro vendor plans), featured listings, in-app ads</span></div></div>
+  <div class="milestone-row"><span class="ms-dot q3"></span><span class="ms-label">Q3 2027</span><div><p>MVP 2 live — Bartar commodity exchange launches</p><span>Enterprise KYC, RFQ matching engine, bulk trade coordination, contract generation, market intelligence dashboard</span></div></div>
+  <div class="milestone-row"><span class="ms-dot q4"></span><span class="ms-label">Q4 2027</span><div><p>AI recommendation layer + enterprise partnerships</p><span>TensorFlow recommendation models in production, pricing analytics, first enterprise accounts onboarded on Bartar</span></div></div>
+  <div class="milestone-row"><span class="ms-dot y2"></span><span class="ms-label">2028</span><div><p>Logistics integration + regional scaling</p><span>Partnership with 3PL providers (GIG Logistics, Kwik), real-time tracking, expand to more Nigerian states, begin Ghana pilot</span></div></div>
+  <div class="milestone-row"><span class="ms-dot y3"></span><span class="ms-label">2029–30</span><div><p>Cross-border expansion + advanced analytics</p><span>Multi-currency support, cross-border ECOWAS trade enablement on Bartar, advanced ML demand forecasting, potential fintech integration</span></div></div>
+
+  <div class="section-label">Technical risk register</div>
+  <div class="risk-row"><span class="risk-badge high">High</span><div><p>KYC API reliability — BVN/NIN APIs (Mono, Okra, Smile Identity) have downtime</p><span>Mitigation: integrate two providers, fallback logic, manual review queue for failed verifications</span></div></div>
+  <div class="risk-row"><span class="risk-badge high">High</span><div><p>Payment provider risks — Paystack/Flutterwave disputes, settlement delays</p><span>Mitigation: integrate both providers, maintain direct CBN settlement account, escrow reserve buffer</span></div></div>
+  <div class="risk-row"><span class="risk-badge high">High</span><div><p>User adoption — vendors resistant to digital onboarding and KYC complexity</p><span>Mitigation: offline onboarding agents, simplified KYC flow, community ambassador program, local language support (Yoruba, Hausa, Igbo)</span></div></div>
+  <div class="risk-row"><span class="risk-badge medium">Medium</span><div><p>Regulatory changes — CBN fintech regulations, FCCPC marketplace rules</p><span>Mitigation: engage legal advisors proactively, CAC compliance, monitor CBN/SEC circulars, build flexible compliance module</span></div></div>
+  <div class="risk-row"><span class="risk-badge medium">Medium</span><div><p>Fraud and fake listings — fake vendors, product misrepresentation</p><span>Mitigation: manual admin review, face recognition, buyer dispute system, vendor rating system, automated ML fraud flag</span></div></div>
+  <div class="risk-row"><span class="risk-badge medium">Medium</span><div><p>Internet connectivity — target users in rural/peri-urban areas with poor data</p><span>Mitigation: Flutter offline-capable features for browsing, image compression, lightweight API responses, progressive loading</span></div></div>
+  <div class="risk-row"><span class="risk-badge low">Low</span><div><p>Database performance at scale — PostgreSQL under high transaction volume</p><span>Mitigation: read replicas from day one, Redis caching on hot queries, connection pooling (PgBouncer), index strategy from schema design phase</span></div></div>
+  <div class="risk-row"><span class="risk-badge low">Low</span><div><p>Team scaling — hiring backend/Flutter engineers in Nigeria with required seniority</p><span>Mitigation: remote-first hiring, competitive NGN salaries, equity participation, structured onboarding and documentation culture</span></div></div>
+
+  <div class="section-label">Build priority order (for first hire decisions)</div>
+  <div class="card">
+    <ul>
+      <li>Hire #1: Senior backend engineer (Node.js + PostgreSQL) — owns API design and database schema</li>
+      <li>Hire #2: Flutter engineer — owns mobile app (Android first)</li>
+      <li>Hire #3: DevOps/Cloud engineer — owns AWS infrastructure, CI/CD, monitoring</li>
+      <li>Hire #4: UI/UX designer — owns Seed app screens + Bartar web dashboard</li>
+      <li>Hire #5: Python/ML engineer — joins when Bartar data pipeline starts (Phase 2)</li>
+      <li>Cybersecurity specialist: contract/fractional until Phase 2 then full-time</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>

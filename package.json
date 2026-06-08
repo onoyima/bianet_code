@@ -1,0 +1,27 @@
+{
+  "name": "workspace",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "lib/*",
+    "lib/integrations/*",
+    "server",
+    "web",
+    "mobile",
+    "scripts"
+  ],
+  "scripts": {
+    "build": "npm run typecheck && npm run build:api",
+    "build:api": "npm run -w server build",
+    "build:web": "npm run -w web build",
+    "build:sandbox": "npm run -w mobile build",
+    "typecheck:libs": "tsc --build",
+    "typecheck": "npm run typecheck:libs && npm run -ws --if-present typecheck"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.3",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.2"
+  }
+}

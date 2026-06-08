@@ -1,0 +1,667 @@
+
+<h2 class="sr-only">Bia'net Tech Ltd. — UI mockups for Seed mobile app, Bartar web app, and Admin dashboard</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1.25rem}
+.tab{padding:5px 13px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:20px;cursor:pointer;background:transparent;color:var(--color-text-secondary)}
+.tab.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.panel{display:none}.panel.active{display:block}
+
+/* device frames */
+.phone-frame{width:220px;border:2px solid var(--color-border-primary);border-radius:28px;overflow:hidden;background:var(--color-background-primary);flex-shrink:0}
+.phone-bar{height:22px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;gap:8px}
+.phone-notch{width:40px;height:6px;background:var(--color-border-secondary);border-radius:3px}
+.phone-screen{padding:0;min-height:440px;background:var(--color-background-secondary)}
+.phone-status{height:18px;background:var(--color-background-primary);display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:9px;color:var(--color-text-secondary)}
+.phone-home{height:22px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center}
+.phone-pill{width:50px;height:4px;background:var(--color-border-secondary);border-radius:2px}
+
+/* web frame */
+.browser-frame{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-primary)}
+.browser-bar{height:32px;background:var(--color-background-secondary);display:flex;align-items:center;gap:6px;padding:0 12px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.b-dot{width:8px;height:8px;border-radius:50%;background:var(--color-border-secondary)}
+.b-url{flex:1;height:18px;background:var(--color-background-primary);border-radius:9px;margin:0 8px;display:flex;align-items:center;padding:0 8px;font-size:9px;color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+
+/* seed mobile components */
+.s-nav{height:44px;background:var(--color-background-primary);display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.s-nav-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.s-search{margin:8px 10px;height:30px;background:var(--color-background-secondary);border-radius:8px;display:flex;align-items:center;gap:6px;padding:0 8px;font-size:11px;color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+.s-cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:0 10px;margin-bottom:8px}
+.s-cat{height:52px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer}
+.s-cat i{font-size:16px;color:var(--color-text-info)}
+.s-cat span{font-size:9px;color:var(--color-text-secondary)}
+.s-section-label{font-size:10px;font-weight:500;color:var(--color-text-secondary);padding:0 10px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.s-listing-row{display:flex;gap:6px;padding:0 10px;margin-bottom:6px;overflow:hidden}
+.s-listing-card{flex:0 0 90px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;overflow:hidden}
+.s-listing-img{height:52px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center}
+.s-listing-info{padding:4px;font-size:9px}
+.s-listing-name{font-weight:500;color:var(--color-text-primary);margin-bottom:1px}
+.s-listing-price{color:var(--color-text-success);font-weight:500}
+.s-bottom-nav{height:46px;background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-around}
+.s-bnav-item{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;color:var(--color-text-secondary);cursor:pointer}
+.s-bnav-item.active{color:var(--color-text-info)}
+.s-badge{background:#E6F1FB;color:#185FA5;font-size:8px;padding:1px 5px;border-radius:6px;font-weight:500}
+.s-badge-green{background:#EAF3DE;color:#3B6D11;font-size:8px;padding:1px 5px;border-radius:6px;font-weight:500}
+.s-badge-amber{background:#FAEEDA;color:#854F0B;font-size:8px;padding:1px 5px;border-radius:6px;font-weight:500}
+.s-badge-red{background:#FCEBEB;color:#A32D2D;font-size:8px;padding:1px 5px;border-radius:6px;font-weight:500}
+
+/* vendor dashboard */
+.v-stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:4px;padding:6px 10px}
+.v-stat{background:var(--color-background-secondary);border-radius:6px;padding:6px 8px}
+.v-stat-label{font-size:8px;color:var(--color-text-secondary);margin-bottom:2px}
+.v-stat-val{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.v-order-item{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.v-order-avatar{width:28px;height:28px;border-radius:50%;background:var(--color-background-info);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#185FA5;flex-shrink:0}
+.v-order-info{flex:1;min-width:0}
+.v-order-name{font-size:10px;font-weight:500;color:var(--color-text-primary)}
+.v-order-detail{font-size:9px;color:var(--color-text-secondary)}
+
+/* listing detail */
+.s-detail-img{height:100px;background:linear-gradient(135deg,#EAF3DE 0%,#C0DD97 100%);display:flex;align-items:center;justify-content:center;font-size:32px}
+.s-detail-body{padding:10px}
+.s-detail-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.s-detail-price{font-size:16px;font-weight:500;color:#3B6D11;margin-bottom:6px}
+.s-detail-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:10px;color:var(--color-text-secondary)}
+.s-detail-vendor{display:flex;align-items:center;gap:6px;padding:6px 0;border-top:0.5px solid var(--color-border-tertiary);border-bottom:0.5px solid var(--color-border-tertiary);margin:6px 0}
+.s-btn{background:#1B3A6B;color:#fff;border:none;border-radius:8px;padding:8px 0;font-size:11px;font-weight:500;width:100%;cursor:pointer;margin-top:6px}
+
+/* web sidebar */
+.web-sidebar{width:160px;flex-shrink:0;border-right:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+.w-logo{height:44px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.w-nav-section{padding:10px 14px 4px;font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-secondary)}
+.w-nav-item{display:flex;align-items:center;gap:8px;padding:6px 14px;font-size:11px;color:var(--color-text-secondary);cursor:pointer;border-radius:0}
+.w-nav-item.active{color:var(--color-text-info);background:var(--color-background-info)}
+.w-nav-item i{font-size:14px}
+.web-main{flex:1;overflow:hidden}
+.web-topbar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.web-topbar-title{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.web-content{padding:14px 16px;overflow:hidden}
+
+/* bartar components */
+.b-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.b-kpi{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px}
+.b-kpi-label{font-size:10px;color:var(--color-text-secondary);margin-bottom:4px}
+.b-kpi-val{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.b-kpi-sub{font-size:9px;color:var(--color-text-secondary);margin-top:2px}
+.b-table{width:100%;border-collapse:collapse;font-size:11px}
+.b-table th{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-secondary);padding:6px 8px;text-align:left;border-bottom:0.5px solid var(--color-border-tertiary)}
+.b-table td{padding:7px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.b-table tr:last-child td{border-bottom:none}
+.b-table tr:hover td{background:var(--color-background-secondary)}
+.b-badge{font-size:9px;padding:2px 7px;border-radius:8px;font-weight:500;white-space:nowrap}
+.negotiating{background:#FAEEDA;color:#854F0B}
+.confirmed{background:#E6F1FB;color:#185FA5}
+.transit{background:#EEEDFE;color:#534AB7}
+.completed{background:#EAF3DE;color:#3B6D11}
+.pending{background:#FAEEDA;color:#854F0B}
+.b-deal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.b-deal-title{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.b-deal-sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.b-timeline{margin:10px 0}
+.b-timeline-step{display:flex;align-items:flex-start;gap:10px;padding:6px 0}
+.b-tl-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:8px}
+.done{background:#EAF3DE;color:#3B6D11}
+.active-dot{background:#E6F1FB;color:#185FA5}
+.todo-dot{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary)}
+.b-tl-label{font-size:11px;color:var(--color-text-primary)}
+.b-tl-sub{font-size:10px;color:var(--color-text-secondary)}
+.b-tl-line{width:1px;height:14px;background:var(--color-border-tertiary);margin-left:7px}
+.intel-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.intel-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;padding:10px 12px}
+.intel-commodity{font-size:11px;font-weight:500;color:var(--color-text-primary)}
+.intel-price{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:3px 0}
+.intel-delta-up{font-size:10px;color:#3B6D11}
+.intel-delta-down{font-size:10px;color:#A32D2D}
+.mini-chart{height:32px;display:flex;align-items:flex-end;gap:2px;margin-top:6px}
+.mc-bar{flex:1;border-radius:2px 2px 0 0;background:var(--color-border-secondary)}
+
+/* admin components */
+.admin-metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.adm{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px}
+.adm-label{font-size:10px;color:var(--color-text-secondary);margin-bottom:4px}
+.adm-val{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.adm-tag{font-size:9px;margin-top:2px}
+.queue-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.queue-avatar{width:28px;height:28px;border-radius:50%;background:var(--color-background-info);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#185FA5;flex-shrink:0}
+.queue-name{font-size:11px;font-weight:500;color:var(--color-text-primary)}
+.queue-detail{font-size:9px;color:var(--color-text-secondary)}
+.queue-actions{display:flex;gap:4px;margin-left:auto;flex-shrink:0}
+.q-approve{font-size:9px;padding:3px 8px;border:0.5px solid #3B6D11;border-radius:5px;color:#3B6D11;background:transparent;cursor:pointer}
+.q-reject{font-size:9px;padding:3px 8px;border:0.5px solid #A32D2D;border-radius:5px;color:#A32D2D;background:transparent;cursor:pointer}
+.kyc-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.kyc-icon{width:28px;height:28px;background:var(--color-background-secondary);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.kyc-name{font-size:10px;font-weight:500;color:var(--color-text-primary)}
+.kyc-detail{font-size:9px;color:var(--color-text-secondary)}
+.adm-chart{display:flex;align-items:flex-end;gap:3px;height:60px;margin-top:8px}
+.adm-bar{flex:1;border-radius:2px 2px 0 0;min-width:0}
+</style>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('seed-home')">Seed — home</button>
+  <button class="tab" onclick="show('seed-detail')">Seed — listing detail</button>
+  <button class="tab" onclick="show('seed-vendor')">Seed — vendor dashboard</button>
+  <button class="tab" onclick="show('bartar-dash')">Bartar — dashboard</button>
+  <button class="tab" onclick="show('bartar-deal')">Bartar — deal view</button>
+  <button class="tab" onclick="show('bartar-intel')">Bartar — market intel</button>
+  <button class="tab" onclick="show('admin')">Admin dashboard</button>
+</div>
+
+<!-- SEED HOME -->
+<div class="panel active" id="panel-seed-home">
+<div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+<div class="phone-frame">
+  <div class="phone-bar"><div class="phone-notch"></div></div>
+  <div class="phone-screen">
+    <div class="phone-status"><span>9:41</span><span>●●● 100%</span></div>
+    <div class="s-nav"><span class="s-nav-title">Seed</span><i class="ti ti-bell" style="font-size:16px;color:var(--color-text-secondary)" aria-hidden="true"></i></div>
+    <div style="padding:6px 10px 4px;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:9px;color:var(--color-text-secondary)">Good morning,</div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Chidi 👋</div></div>
+      <div style="width:28px;height:28px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#185FA5">CB</div>
+    </div>
+    <div class="s-search"><i class="ti ti-search" style="font-size:12px" aria-hidden="true"></i><span>Search products, vendors…</span></div>
+    <!-- banner -->
+    <div style="margin:0 10px 8px;background:linear-gradient(90deg,#1B3A6B,#0F6E56);border-radius:8px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:9px;color:rgba(255,255,255,.7)">Fresh harvest</div><div style="font-size:11px;font-weight:500;color:#fff">Organic vegetables</div><div style="font-size:8px;color:rgba(255,255,255,.6);margin-top:2px">From ₦800/kg</div></div>
+      <div style="font-size:28px">🥬</div>
+    </div>
+    <div class="s-section-label">Browse by category</div>
+    <div class="s-cat-grid">
+      <div class="s-cat"><i class="ti ti-plant-2" aria-hidden="true"></i><span>Vegetables</span></div>
+      <div class="s-cat"><i class="ti ti-wheat" aria-hidden="true"></i><span>Grains</span></div>
+      <div class="s-cat"><i class="ti ti-apple" aria-hidden="true"></i><span>Fruits</span></div>
+      <div class="s-cat"><i class="ti ti-egg" aria-hidden="true"></i><span>Livestock</span></div>
+      <div class="s-cat"><i class="ti ti-tools" aria-hidden="true"></i><span>Equipment</span></div>
+      <div class="s-cat"><i class="ti ti-dots" aria-hidden="true"></i><span>More</span></div>
+    </div>
+    <div class="s-section-label">Featured listings</div>
+    <div class="s-listing-row">
+      <div class="s-listing-card"><div class="s-listing-img"><span style="font-size:20px">🌽</span></div><div class="s-listing-info"><div class="s-listing-name">Yellow Maize</div><div class="s-listing-price">₦450/kg</div><div style="font-size:8px;color:var(--color-text-secondary)">Lagos</div></div></div>
+      <div class="s-listing-card"><div class="s-listing-img"><span style="font-size:20px">🥕</span></div><div class="s-listing-info"><div class="s-listing-name">Carrots</div><div class="s-listing-price">₦350/kg</div><div style="font-size:8px;color:var(--color-text-secondary)">Abuja</div></div></div>
+      <div class="s-listing-card"><div class="s-listing-img"><span style="font-size:20px">🫚</span></div><div class="s-listing-info"><div class="s-listing-name">Palm Oil</div><div class="s-listing-price">₦1,200/L</div><div style="font-size:8px;color:var(--color-text-secondary)">Rivers</div></div></div>
+    </div>
+    <div style="height:4px"></div>
+  </div>
+  <div class="s-bottom-nav">
+    <div class="s-bnav-item active"><i class="ti ti-home-2" style="font-size:18px" aria-hidden="true"></i><span>Home</span></div>
+    <div class="s-bnav-item"><i class="ti ti-search" style="font-size:18px" aria-hidden="true"></i><span>Browse</span></div>
+    <div class="s-bnav-item"><i class="ti ti-shopping-cart" style="font-size:18px" aria-hidden="true"></i><span>Cart</span></div>
+    <div class="s-bnav-item"><i class="ti ti-package" style="font-size:18px" aria-hidden="true"></i><span>Orders</span></div>
+    <div class="s-bnav-item"><i class="ti ti-user" style="font-size:18px" aria-hidden="true"></i><span>Profile</span></div>
+  </div>
+  <div class="phone-home"><div class="phone-pill"></div></div>
+</div>
+<div style="flex:1;min-width:200px">
+  <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">Seed — buyer home screen</div>
+  <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:10px">The entry point for buyers. Personalized greeting, search bar, category grid, promotional banner, and featured listings. Designed for low-end Android — no heavy animations, skeleton loaders on images, offline cache for last-loaded listings.</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px">
+      <i class="ti ti-search" style="color:var(--color-text-info);font-size:14px;margin-top:1px" aria-hidden="true"></i>
+      <div><div style="font-weight:500;color:var(--color-text-primary)">Search bar</div><div style="color:var(--color-text-secondary)">Full-text search via PostgreSQL tsvector. Instant results with debounced query.</div></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px">
+      <i class="ti ti-grid-dots" style="color:var(--color-text-info);font-size:14px;margin-top:1px" aria-hidden="true"></i>
+      <div><div style="font-weight:500;color:var(--color-text-primary)">Category grid</div><div style="color:var(--color-text-secondary)">6 main categories seeded by admin. Tap navigates to filtered browse with pre-applied category filter.</div></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px">
+      <i class="ti ti-star" style="color:var(--color-text-info);font-size:14px;margin-top:1px" aria-hidden="true"></i>
+      <div><div style="font-weight:500;color:var(--color-text-primary)">Featured listings</div><div style="color:var(--color-text-secondary)">Paid featured_until listings from verified vendors. Commission model in Phase 2.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- SEED LISTING DETAIL -->
+<div class="panel" id="panel-seed-detail">
+<div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+<div class="phone-frame">
+  <div class="phone-bar"><div class="phone-notch"></div></div>
+  <div class="phone-screen">
+    <div class="phone-status"><span>9:41</span><span>●●● 100%</span></div>
+    <div class="s-nav"><i class="ti ti-arrow-left" style="font-size:16px;color:var(--color-text-secondary)" aria-hidden="true"></i><span class="s-nav-title">Listing</span><i class="ti ti-heart" style="font-size:16px;color:var(--color-text-secondary)" aria-hidden="true"></i></div>
+    <div class="s-detail-img"><span>🌽</span></div>
+    <div style="display:flex;justify-content:center;gap:4px;padding:5px 0">
+      <div style="width:18px;height:3px;border-radius:2px;background:#185FA5"></div>
+      <div style="width:6px;height:3px;border-radius:2px;background:var(--color-border-secondary)"></div>
+      <div style="width:6px;height:3px;border-radius:2px;background:var(--color-border-secondary)"></div>
+    </div>
+    <div class="s-detail-body">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div class="s-detail-title">Yellow Maize (Grade A)</div>
+        <span class="s-badge-green">In stock</span>
+      </div>
+      <div class="s-detail-price">₦450/kg</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+        <span class="s-badge"><i class="ti ti-map-pin" style="font-size:9px" aria-hidden="true"></i> Lagos, Ojo</span>
+        <span class="s-badge"><i class="ti ti-package" style="font-size:9px" aria-hidden="true"></i> MOQ: 50kg</span>
+      </div>
+      <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:6px">Freshly harvested Grade A yellow maize. Moisture content below 12%. Available in bags or bulk.</div>
+      <div class="s-detail-vendor">
+        <div style="width:24px;height:24px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#185FA5">AO</div>
+        <div><div style="font-size:10px;font-weight:500;color:var(--color-text-primary)">Ade Okafor Farms</div><div style="font-size:9px;color:var(--color-text-secondary)">⭐ 4.8 · 127 sales · Verified</div></div>
+        <i class="ti ti-message" style="margin-left:auto;font-size:16px;color:var(--color-text-info)" aria-hidden="true"></i>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <div style="flex:1;background:var(--color-background-secondary);border-radius:6px;padding:5px 8px;display:flex;align-items:center;justify-content:space-between;border:0.5px solid var(--color-border-tertiary)">
+          <span style="font-size:16px;cursor:pointer;color:var(--color-text-secondary)">−</span>
+          <span style="font-size:11px;font-weight:500">100 kg</span>
+          <span style="font-size:16px;cursor:pointer;color:var(--color-text-secondary)">+</span>
+        </div>
+        <div style="font-size:11px;font-weight:500;color:#3B6D11">₦45,000</div>
+      </div>
+      <button class="s-btn">Add to cart</button>
+    </div>
+  </div>
+  <div class="phone-home"><div class="phone-pill"></div></div>
+</div>
+<div style="flex:1;min-width:200px">
+  <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">Seed — listing detail</div>
+  <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:10px">Full product detail with photo gallery, vendor profile, verified badge, quantity stepper (respects MOQ), and total price calculation in real-time. Direct message button opens order-scoped chat with the vendor.</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px">
+      <i class="ti ti-shield-check" style="color:#3B6D11;font-size:14px;margin-top:1px" aria-hidden="true"></i>
+      <div><div style="font-weight:500;color:var(--color-text-primary)">Verified vendor badge</div><div style="color:var(--color-text-secondary)">Only shown when kyc_status = verified AND approval_status = approved in DB.</div></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px">
+      <i class="ti ti-arrows-up-down" style="color:#3B6D11;font-size:14px;margin-top:1px" aria-hidden="true"></i>
+      <div><div style="font-weight:500;color:var(--color-text-primary)">Quantity stepper</div><div style="color:var(--color-text-secondary)">Min enforced as listing.moq. Max enforced as listing.available_qty. Total = qty × unit_price.</div></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px">
+      <i class="ti ti-credit-card" style="color:#3B6D11;font-size:14px;margin-top:1px" aria-hidden="true"></i>
+      <div><div style="font-weight:500;color:var(--color-text-primary)">"Add to cart" flow</div><div style="color:var(--color-text-secondary)">Snapshots unit_price at add time into cart.items jsonb. Price changes don't affect existing cart.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- SEED VENDOR DASHBOARD -->
+<div class="panel" id="panel-seed-vendor">
+<div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+<div class="phone-frame">
+  <div class="phone-bar"><div class="phone-notch"></div></div>
+  <div class="phone-screen">
+    <div class="phone-status"><span>9:41</span><span>●●● 100%</span></div>
+    <div class="s-nav"><span class="s-nav-title">Vendor dashboard</span><i class="ti ti-settings" style="font-size:16px;color:var(--color-text-secondary)" aria-hidden="true"></i></div>
+    <div class="v-stat-row">
+      <div class="v-stat"><div class="v-stat-label">Today's earnings</div><div class="v-stat-val">₦18,500</div></div>
+      <div class="v-stat"><div class="v-stat-label">This week</div><div class="v-stat-val">₦92,000</div></div>
+      <div class="v-stat"><div class="v-stat-label">Pending orders</div><div class="v-stat-val" style="color:#854F0B">4</div></div>
+      <div class="v-stat"><div class="v-stat-label">Active listings</div><div class="v-stat-val">23</div></div>
+    </div>
+    <div style="display:flex;gap:6px;padding:0 10px 6px">
+      <div style="flex:1;background:#1B3A6B;color:#fff;border-radius:6px;padding:8px 10px;font-size:10px;font-weight:500;text-align:center;cursor:pointer">New listing</div>
+      <div style="flex:1;background:var(--color-background-secondary);color:var(--color-text-primary);border-radius:6px;padding:8px 10px;font-size:10px;font-weight:500;text-align:center;border:0.5px solid var(--color-border-secondary);cursor:pointer">Withdraw</div>
+    </div>
+    <div style="padding:0 10px 4px;font-size:10px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;justify-content:space-between">
+      <span>Pending orders</span><span style="font-size:9px;color:var(--color-text-info)">See all</span>
+    </div>
+    <div class="v-order-item">
+      <div class="v-order-avatar">AK</div>
+      <div class="v-order-info"><div class="v-order-name">Amara Kalu</div><div class="v-order-detail">200kg Yellow Maize · ₦90,000</div></div>
+      <span class="s-badge-amber">New</span>
+    </div>
+    <div class="v-order-item">
+      <div class="v-order-avatar">FB</div>
+      <div class="v-order-info"><div class="v-order-name">Fatima Bello</div><div class="v-order-detail">50kg Carrots · ₦17,500</div></div>
+      <span class="s-badge">Paid</span>
+    </div>
+    <div class="v-order-item">
+      <div class="v-order-avatar">OE</div>
+      <div class="v-order-info"><div class="v-order-name">Olumide Eze</div><div class="v-order-detail">150kg Rice · ₦82,500</div></div>
+      <span class="s-badge">Dispatched</span>
+    </div>
+    <div style="padding:8px 10px 4px;font-size:10px;font-weight:500;color:var(--color-text-primary)">Wallet</div>
+    <div style="margin:0 10px;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:9px;color:var(--color-text-secondary)">Available balance</div><div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">₦182,400</div></div>
+      <div style="font-size:9px;color:var(--color-text-secondary)">Pending: ₦90,000</div>
+    </div>
+    <div style="height:4px"></div>
+  </div>
+  <div class="s-bottom-nav">
+    <div class="s-bnav-item"><i class="ti ti-home-2" style="font-size:18px" aria-hidden="true"></i><span>Home</span></div>
+    <div class="s-bnav-item"><i class="ti ti-package" style="font-size:18px" aria-hidden="true"></i><span>Listings</span></div>
+    <div class="s-bnav-item active"><i class="ti ti-chart-bar" style="font-size:18px" aria-hidden="true"></i><span>Dashboard</span></div>
+    <div class="s-bnav-item"><i class="ti ti-message" style="font-size:18px" aria-hidden="true"></i><span>Messages</span></div>
+    <div class="s-bnav-item"><i class="ti ti-user" style="font-size:18px" aria-hidden="true"></i><span>Profile</span></div>
+  </div>
+  <div class="phone-home"><div class="phone-pill"></div></div>
+</div>
+<div style="flex:1;min-width:200px">
+  <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">Seed — vendor dashboard</div>
+  <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:10px">Role-switched view of the same Seed app. After BVN/NIN verification and admin approval, the user's role = vendor and this dashboard appears. Earnings, pending orders, and wallet balance are the first things a vendor sees every morning.</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px">
+      <i class="ti ti-coin" style="color:#854F0B;font-size:14px;margin-top:1px" aria-hidden="true"></i>
+      <div><div style="font-weight:500;color:var(--color-text-primary)">Earnings cards</div><div style="color:var(--color-text-secondary)">Aggregated from commission_ledger + vendor_wallets. Today = where created_at date = today.</div></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px">
+      <i class="ti ti-alert-circle" style="color:#854F0B;font-size:14px;margin-top:1px" aria-hidden="true"></i>
+      <div><div style="font-weight:500;color:var(--color-text-primary)">Pending orders badge</div><div style="color:var(--color-text-secondary)">Orders with status = paid where vendor hasn't confirmed. Amber highlight — requires action.</div></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px">
+      <i class="ti ti-wallet" style="color:#854F0B;font-size:14px;margin-top:1px" aria-hidden="true"></i>
+      <div><div style="font-weight:500;color:var(--color-text-primary)">Wallet section</div><div style="color:var(--color-text-secondary)">available_balance (cleared for withdrawal) vs pending_balance (still in escrow).</div></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- BARTAR DASHBOARD -->
+<div class="panel" id="panel-bartar-dash">
+<div class="browser-frame">
+  <div class="browser-bar">
+    <div class="b-dot" style="background:#A32D2D"></div>
+    <div class="b-dot" style="background:#854F0B"></div>
+    <div class="b-dot" style="background:#3B6D11"></div>
+    <div class="b-url">bartar.bianettechltd.com/dashboard</div>
+  </div>
+  <div style="display:flex;min-height:420px">
+    <div class="web-sidebar">
+      <div class="w-logo"><i class="ti ti-exchange" style="font-size:16px;color:#0F6E56" aria-hidden="true"></i> Bartar</div>
+      <div class="w-nav-section">Main</div>
+      <div class="w-nav-item active"><i class="ti ti-dashboard" aria-hidden="true"></i> Dashboard</div>
+      <div class="w-nav-item"><i class="ti ti-stack" aria-hidden="true"></i> My offers</div>
+      <div class="w-nav-item"><i class="ti ti-file-text" aria-hidden="true"></i> RFQs</div>
+      <div class="w-nav-item"><i class="ti ti-handshake" aria-hidden="true"></i> Deals</div>
+      <div class="w-nav-section">Analytics</div>
+      <div class="w-nav-item"><i class="ti ti-chart-line" aria-hidden="true"></i> Market intel</div>
+      <div class="w-nav-item"><i class="ti ti-report" aria-hidden="true"></i> Reports</div>
+      <div class="w-nav-section">Account</div>
+      <div class="w-nav-item"><i class="ti ti-building" aria-hidden="true"></i> Company</div>
+      <div class="w-nav-item"><i class="ti ti-settings" aria-hidden="true"></i> Settings</div>
+    </div>
+    <div class="web-main">
+      <div class="web-topbar">
+        <span class="web-topbar-title">Dashboard</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;color:var(--color-text-secondary)">Sunrise Agro Exports Ltd.</span>
+          <div style="width:28px;height:28px;border-radius:50%;background:#EAF3DE;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#3B6D11">SA</div>
+        </div>
+      </div>
+      <div class="web-content">
+        <div class="b-kpi-row">
+          <div class="b-kpi"><div class="b-kpi-label">Active deals</div><div class="b-kpi-val">7</div><div class="b-kpi-sub">₦245M in progress</div></div>
+          <div class="b-kpi"><div class="b-kpi-label">Open RFQs</div><div class="b-kpi-val">3</div><div class="b-kpi-sub">Awaiting matches</div></div>
+          <div class="b-kpi"><div class="b-kpi-label">This month GMV</div><div class="b-kpi-val">₦88M</div><div class="b-kpi-sub" style="color:#3B6D11">↑ 22% vs last</div></div>
+          <div class="b-kpi"><div class="b-kpi-label">Pending action</div><div class="b-kpi-val" style="color:#854F0B">2</div><div class="b-kpi-sub">Require response</div></div>
+        </div>
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">Active deals pipeline</div>
+        <table class="b-table" style="font-size:11px">
+          <thead><tr><th>Commodity</th><th>Buyer / Seller</th><th>Value</th><th>Status</th><th>Updated</th></tr></thead>
+          <tbody>
+            <tr><td>Sesame (Grade A)</td><td>Lagos Grains Co.</td><td>₦42M</td><td><span class="b-badge transit">In transit</span></td><td>Today</td></tr>
+            <tr><td>Cocoa (80%)</td><td>Kano Agro Int.</td><td>₦78M</td><td><span class="b-badge confirmed">Contract signed</span></td><td>Yesterday</td></tr>
+            <tr><td>Yellow Maize</td><td>FoodBridge Ltd.</td><td>₦18.5M</td><td><span class="b-badge negotiating">Negotiating</span></td><td>2 days ago</td></tr>
+            <tr><td>Ginger (Dried)</td><td>Spice Routes Ltd.</td><td>₦31M</td><td><span class="b-badge confirmed">Deposit paid</span></td><td>3 days ago</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- BARTAR DEAL VIEW -->
+<div class="panel" id="panel-bartar-deal">
+<div class="browser-frame">
+  <div class="browser-bar">
+    <div class="b-dot" style="background:#A32D2D"></div>
+    <div class="b-dot" style="background:#854F0B"></div>
+    <div class="b-dot" style="background:#3B6D11"></div>
+    <div class="b-url">bartar.bianettechltd.com/deals/DL-2024-0089</div>
+  </div>
+  <div style="display:flex;min-height:420px">
+    <div class="web-sidebar">
+      <div class="w-logo"><i class="ti ti-exchange" style="font-size:16px;color:#0F6E56" aria-hidden="true"></i> Bartar</div>
+      <div class="w-nav-section">Main</div>
+      <div class="w-nav-item"><i class="ti ti-dashboard" aria-hidden="true"></i> Dashboard</div>
+      <div class="w-nav-item"><i class="ti ti-stack" aria-hidden="true"></i> My offers</div>
+      <div class="w-nav-item"><i class="ti ti-file-text" aria-hidden="true"></i> RFQs</div>
+      <div class="w-nav-item active"><i class="ti ti-handshake" aria-hidden="true"></i> Deals</div>
+      <div class="w-nav-section">Analytics</div>
+      <div class="w-nav-item"><i class="ti ti-chart-line" aria-hidden="true"></i> Market intel</div>
+      <div class="w-nav-section">Account</div>
+      <div class="w-nav-item"><i class="ti ti-building" aria-hidden="true"></i> Company</div>
+    </div>
+    <div class="web-main">
+      <div class="web-topbar">
+        <div style="display:flex;align-items:center;gap:8px">
+          <i class="ti ti-arrow-left" style="font-size:16px;color:var(--color-text-secondary);cursor:pointer" aria-hidden="true"></i>
+          <span class="web-topbar-title">Deal DL-2024-0089</span>
+          <span class="b-badge transit" style="font-size:10px">In transit</span>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button style="font-size:11px;padding:4px 10px;border:0.5px solid var(--color-border-secondary);border-radius:6px;background:transparent;color:var(--color-text-secondary);cursor:pointer">Download contract</button>
+          <button style="font-size:11px;padding:4px 10px;border:none;border-radius:6px;background:#1B3A6B;color:#fff;cursor:pointer">Confirm receipt</button>
+        </div>
+      </div>
+      <div class="web-content">
+        <div class="b-deal-header">
+          <div>
+            <div class="b-deal-title">Sesame Seeds — Grade A, 80 tonnes</div>
+            <div class="b-deal-sub">Seller: Kano Sesame Cooperative · Buyer: Sunrise Agro Exports Ltd.</div>
+          </div>
+          <div style="text-align:right"><div style="font-size:18px;font-weight:500;color:var(--color-text-primary)">₦42,000,000</div><div style="font-size:10px;color:var(--color-text-secondary)">₦525/kg · 80,000 kg</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <div style="font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">Deal timeline</div>
+            <div class="b-timeline">
+              <div class="b-timeline-step"><div class="b-tl-dot done"><i class="ti ti-check" style="font-size:8px" aria-hidden="true"></i></div><div><div class="b-tl-label">Offer matched to RFQ</div><div class="b-tl-sub">Dec 2, 2024</div></div></div>
+              <div class="b-tl-line"></div>
+              <div class="b-timeline-step"><div class="b-tl-dot done"><i class="ti ti-check" style="font-size:8px" aria-hidden="true"></i></div><div><div class="b-tl-label">Contract signed</div><div class="b-tl-sub">Dec 4, 2024</div></div></div>
+              <div class="b-tl-line"></div>
+              <div class="b-timeline-step"><div class="b-tl-dot done"><i class="ti ti-check" style="font-size:8px" aria-hidden="true"></i></div><div><div class="b-tl-label">30% deposit paid</div><div class="b-tl-sub">₦12,600,000 · Dec 5</div></div></div>
+              <div class="b-tl-line"></div>
+              <div class="b-timeline-step"><div class="b-tl-dot active-dot" style="font-size:8px">→</div><div><div class="b-tl-label" style="color:var(--color-text-info)">In transit</div><div class="b-tl-sub">Expected Dec 12</div></div></div>
+              <div class="b-tl-line"></div>
+              <div class="b-timeline-step"><div class="b-tl-dot todo-dot"></div><div><div class="b-tl-label" style="color:var(--color-text-secondary)">Warehouse receipt confirm</div></div></div>
+              <div class="b-tl-line"></div>
+              <div class="b-timeline-step"><div class="b-tl-dot todo-dot"></div><div><div class="b-tl-label" style="color:var(--color-text-secondary)">Final payment released</div></div></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">Payment milestones</div>
+            <table class="b-table" style="font-size:10px">
+              <thead><tr><th>Milestone</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>30% deposit</td><td>₦12.6M</td><td><span class="b-badge completed" style="font-size:8px">Released</span></td></tr>
+                <tr><td>40% on receipt</td><td>₦16.8M</td><td><span class="b-badge pending" style="font-size:8px">Pending</span></td></tr>
+                <tr><td>30% final</td><td>₦12.6M</td><td><span class="b-badge pending" style="font-size:8px">Pending</span></td></tr>
+              </tbody>
+            </table>
+            <div style="margin-top:8px;padding:7px 8px;background:var(--color-background-secondary);border-radius:6px;font-size:10px;color:var(--color-text-secondary)">
+              <i class="ti ti-truck" style="font-size:12px;vertical-align:-2px;margin-right:4px" aria-hidden="true"></i>Tracking: GIG-9920-44AB · Last: Kano checkpoint, Dec 8
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- BARTAR MARKET INTEL -->
+<div class="panel" id="panel-bartar-intel">
+<div class="browser-frame">
+  <div class="browser-bar">
+    <div class="b-dot" style="background:#A32D2D"></div>
+    <div class="b-dot" style="background:#854F0B"></div>
+    <div class="b-dot" style="background:#3B6D11"></div>
+    <div class="b-url">bartar.bianettechltd.com/market-intelligence</div>
+  </div>
+  <div style="display:flex;min-height:420px">
+    <div class="web-sidebar">
+      <div class="w-logo"><i class="ti ti-exchange" style="font-size:16px;color:#0F6E56" aria-hidden="true"></i> Bartar</div>
+      <div class="w-nav-section">Main</div>
+      <div class="w-nav-item"><i class="ti ti-dashboard" aria-hidden="true"></i> Dashboard</div>
+      <div class="w-nav-item"><i class="ti ti-stack" aria-hidden="true"></i> My offers</div>
+      <div class="w-nav-item"><i class="ti ti-file-text" aria-hidden="true"></i> RFQs</div>
+      <div class="w-nav-item"><i class="ti ti-handshake" aria-hidden="true"></i> Deals</div>
+      <div class="w-nav-section">Analytics</div>
+      <div class="w-nav-item active"><i class="ti ti-chart-line" aria-hidden="true"></i> Market intel</div>
+      <div class="w-nav-item"><i class="ti ti-report" aria-hidden="true"></i> Reports</div>
+    </div>
+    <div class="web-main">
+      <div class="web-topbar">
+        <span class="web-topbar-title">Market intelligence</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select style="font-size:11px;padding:3px 6px;border-radius:5px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary)"><option>This month</option><option>Last 3 months</option></select>
+          <button style="font-size:11px;padding:4px 10px;border:0.5px solid var(--color-border-secondary);border-radius:6px;background:transparent;color:var(--color-text-secondary);cursor:pointer"><i class="ti ti-download" style="font-size:12px;vertical-align:-2px;margin-right:4px" aria-hidden="true"></i>Export CSV</button>
+        </div>
+      </div>
+      <div class="web-content">
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px">Live commodity price index — sourced from platform transactions + external feeds</div>
+        <div class="intel-row">
+          <div class="intel-card">
+            <div class="intel-commodity">Sesame (Grade A)</div>
+            <div class="intel-price">₦525/kg</div>
+            <div class="intel-delta-up">↑ 4.2% this week</div>
+            <div class="mini-chart">
+              <div class="mc-bar" style="height:40%;background:#C0DD97"></div>
+              <div class="mc-bar" style="height:50%;background:#C0DD97"></div>
+              <div class="mc-bar" style="height:45%;background:#C0DD97"></div>
+              <div class="mc-bar" style="height:62%;background:#C0DD97"></div>
+              <div class="mc-bar" style="height:58%;background:#C0DD97"></div>
+              <div class="mc-bar" style="height:70%;background:#97C459"></div>
+              <div class="mc-bar" style="height:80%;background:#3B6D11"></div>
+            </div>
+          </div>
+          <div class="intel-card">
+            <div class="intel-commodity">Cocoa (80% grade)</div>
+            <div class="intel-price">₦1,840/kg</div>
+            <div class="intel-delta-up">↑ 8.1% this week</div>
+            <div class="mini-chart">
+              <div class="mc-bar" style="height:55%;background:#FAC775"></div>
+              <div class="mc-bar" style="height:50%;background:#FAC775"></div>
+              <div class="mc-bar" style="height:60%;background:#FAC775"></div>
+              <div class="mc-bar" style="height:65%;background:#EF9F27"></div>
+              <div class="mc-bar" style="height:72%;background:#EF9F27"></div>
+              <div class="mc-bar" style="height:80%;background:#BA7517"></div>
+              <div class="mc-bar" style="height:90%;background:#854F0B"></div>
+            </div>
+          </div>
+          <div class="intel-card">
+            <div class="intel-commodity">Yellow Maize</div>
+            <div class="intel-price">₦450/kg</div>
+            <div class="intel-delta-down">↓ 1.3% this week</div>
+            <div class="mini-chart">
+              <div class="mc-bar" style="height:80%;background:#B5D4F4"></div>
+              <div class="mc-bar" style="height:75%;background:#B5D4F4"></div>
+              <div class="mc-bar" style="height:70%;background:#85B7EB"></div>
+              <div class="mc-bar" style="height:65%;background:#85B7EB"></div>
+              <div class="mc-bar" style="height:68%;background:#85B7EB"></div>
+              <div class="mc-bar" style="height:60%;background:#378ADD"></div>
+              <div class="mc-bar" style="height:55%;background:#185FA5"></div>
+            </div>
+          </div>
+          <div class="intel-card">
+            <div class="intel-commodity">Ginger (Dried)</div>
+            <div class="intel-price">₦1,200/kg</div>
+            <div class="intel-delta-up">↑ 2.8% this week</div>
+            <div class="mini-chart">
+              <div class="mc-bar" style="height:50%;background:#F5C4B3"></div>
+              <div class="mc-bar" style="height:55%;background:#F5C4B3"></div>
+              <div class="mc-bar" style="height:52%;background:#F0997B"></div>
+              <div class="mc-bar" style="height:60%;background:#F0997B"></div>
+              <div class="mc-bar" style="height:65%;background:#D85A30"></div>
+              <div class="mc-bar" style="height:68%;background:#993C1D"></div>
+              <div class="mc-bar" style="height:72%;background:#712B13"></div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">Regional price breakdown (Sesame, Grade A)</div>
+        <table class="b-table">
+          <thead><tr><th>State</th><th>Price/kg</th><th>Volume (tonnes)</th><th>vs last week</th></tr></thead>
+          <tbody>
+            <tr><td>Kano</td><td>₦515</td><td>1,240</td><td style="color:#3B6D11">↑ 5.1%</td></tr>
+            <tr><td>Borno</td><td>₦508</td><td>840</td><td style="color:#3B6D11">↑ 3.8%</td></tr>
+            <tr><td>Lagos</td><td>₦542</td><td>320</td><td style="color:#3B6D11">↑ 2.9%</td></tr>
+            <tr><td>Rivers</td><td>₦535</td><td>180</td><td style="color:#A32D2D">↓ 0.8%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="panel" id="panel-admin">
+<div class="browser-frame">
+  <div class="browser-bar">
+    <div class="b-dot" style="background:#A32D2D"></div>
+    <div class="b-dot" style="background:#854F0B"></div>
+    <div class="b-dot" style="background:#3B6D11"></div>
+    <div class="b-url">admin.bianettechltd.com — restricted access</div>
+  </div>
+  <div style="display:flex;min-height:420px">
+    <div class="web-sidebar">
+      <div class="w-logo"><i class="ti ti-shield" style="font-size:16px;color:#993C1D" aria-hidden="true"></i> Admin</div>
+      <div class="w-nav-section">Approvals</div>
+      <div class="w-nav-item active"><i class="ti ti-user-check" aria-hidden="true"></i> Vendor queue <span style="margin-left:auto;background:#FAEEDA;color:#854F0B;font-size:9px;padding:1px 5px;border-radius:6px">12</span></div>
+      <div class="w-nav-item"><i class="ti ti-building-store" aria-hidden="true"></i> Enterprise queue</div>
+      <div class="w-nav-item"><i class="ti ti-id" aria-hidden="true"></i> KYC review</div>
+      <div class="w-nav-section">Operations</div>
+      <div class="w-nav-item"><i class="ti ti-shopping-cart" aria-hidden="true"></i> Orders</div>
+      <div class="w-nav-item"><i class="ti ti-handshake" aria-hidden="true"></i> Deals</div>
+      <div class="w-nav-item"><i class="ti ti-credit-card" aria-hidden="true"></i> Payments</div>
+      <div class="w-nav-section">Platform</div>
+      <div class="w-nav-item"><i class="ti ti-users" aria-hidden="true"></i> Users</div>
+      <div class="w-nav-item"><i class="ti ti-chart-bar" aria-hidden="true"></i> Analytics</div>
+    </div>
+    <div class="web-main">
+      <div class="web-topbar">
+        <span class="web-topbar-title">Vendor approval queue</span>
+        <div style="font-size:11px;color:var(--color-text-secondary)">12 pending · Logged in as: Admin</div>
+      </div>
+      <div class="web-content">
+        <div class="admin-metric-row">
+          <div class="adm"><div class="adm-label">Total vendors</div><div class="adm-val">1,247</div><div class="adm-tag" style="color:#3B6D11">↑ 48 this week</div></div>
+          <div class="adm"><div class="adm-label">Pending review</div><div class="adm-val" style="color:#854F0B">12</div><div class="adm-tag" style="color:var(--color-text-secondary)">Avg wait: 6h</div></div>
+          <div class="adm"><div class="adm-label">Rejected this week</div><div class="adm-val">3</div><div class="adm-tag" style="color:var(--color-text-secondary)">KYC failures</div></div>
+          <div class="adm"><div class="adm-label">Platform GMV (today)</div><div class="adm-val">₦840M</div><div class="adm-tag" style="color:#3B6D11">↑ 12%</div></div>
+        </div>
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">Pending vendor applications</div>
+        <div class="queue-row">
+          <div class="queue-avatar">MN</div>
+          <div><div class="queue-name">Moses Nwosu Trading</div><div class="queue-detail">Grains · Enugu · BVN ✓ · NIN ✓ · Face ✓ · Applied 2h ago</div></div>
+          <div class="queue-actions"><button class="q-approve">Approve</button><button class="q-reject">Reject</button></div>
+        </div>
+        <div class="queue-row">
+          <div class="queue-avatar">ZD</div>
+          <div><div class="queue-name">Zainab Danladi Farms</div><div class="queue-detail">Vegetables · Kano · BVN ✓ · NIN ✓ · Face ✗ (retry needed) · Applied 4h ago</div></div>
+          <div class="queue-actions"><button class="q-approve">Approve</button><button class="q-reject">Reject</button></div>
+        </div>
+        <div class="queue-row">
+          <div class="queue-avatar">EI</div>
+          <div><div class="queue-name">Emeka Ifeanyi Agro</div><div class="queue-detail">Fruits · Rivers · BVN ✓ · NIN ✗ (pending) · Face ✓ · Applied 5h ago</div></div>
+          <div class="queue-actions"><button class="q-approve">Approve</button><button class="q-reject">Reject</button></div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">Platform GMV — last 7 days (₦M)</div>
+        <div class="adm-chart">
+          <div class="adm-bar" style="height:55%;background:#B5D4F4"></div>
+          <div class="adm-bar" style="height:62%;background:#B5D4F4"></div>
+          <div class="adm-bar" style="height:48%;background:#85B7EB"></div>
+          <div class="adm-bar" style="height:70%;background:#85B7EB"></div>
+          <div class="adm-bar" style="height:75%;background:#378ADD"></div>
+          <div class="adm-bar" style="height:80%;background:#185FA5"></div>
+          <div class="adm-bar" style="height:90%;background:#0C447C"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--color-text-secondary);margin-top:4px"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
